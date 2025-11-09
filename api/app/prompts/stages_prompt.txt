@@ -1,0 +1,25 @@
+Perfect. The Tech Stack is defined.
+
+Now for the final planning step before coding: **Step 3: Staged Handoff Plan.**
+
+Your task is to create a `HANDOFF_STAGES_PLAN.md` document. This document will break down the entire development process into logical, sequential stages. Each stage must contain a list of specific, actionable tasks, and each task must be broken down further into verifiable sub-tasks formatted as checkboxes.
+
+The plan must be so clear and granular that an AI coding agent can follow it from start to finish without ambiguity. The stages should logically progress from project setup, to backend development, to frontend development, to final integration and documentation.
+
+Use the PRD and the Tech Stack documents as your only guides.
+
+{approach_instruction}
+
+Here are the documents for your reference:
+
+**PRD:**
+---
+{prd_content}
+---
+
+**Tech Stack:**
+---
+{tech_stack_content}
+---
+
+Generate the Staged Handoff Plan now.

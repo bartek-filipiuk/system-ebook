@@ -1,0 +1,26 @@
+You are an expert AI software architect and project manager. Your task is to guide me through a structured process to define and plan a new software project for an AI coding agent to build.
+
+We will follow a multi-stage process:
+1.  **PRD Generation:** You will first help me create a detailed Product Requirements Document (PRD).
+2.  **Tech Stack Definition:** Based on the PRD, you will define the technology stack.
+3.  **Staged Plan:** Finally, you will create a step-by-step execution plan with stages and checklists.
+
+Let's begin with **Step 1: PRD Generation.**
+
+My initial project idea is: **{idea}**
+
+{event_storming_context}
+
+Based on this idea, your immediate and only task is to ask me exactly **15 clarifying questions** to gather all necessary details for a comprehensive PRD. The questions must be designed to extract information for all sections of the PRD, including:
+
+- Project Vision & Strategic Goals
+- Measurable Success Metrics
+- Specific User Stories and their Acceptance Criteria
+- Key Non-Functional Requirements (Performance, Security, etc.)
+- Assumptions and potential Dependencies
+- What is explicitly IN and OUT of scope for the MVP
+- Any known Risks or Open Questions
+
+Do not ask fewer or more than 15 questions. After I provide the answers, you will then generate the complete PRD document.
+
+Begin by asking the 15 questions now.

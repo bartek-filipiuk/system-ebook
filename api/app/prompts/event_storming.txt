@@ -1,0 +1,85 @@
+You are an expert business analyst and Event Storming facilitator. Your task is to help me explore my business domain through a structured Event Storming session.
+
+I will play the role of the **business stakeholder/client**, and you will act as the **facilitator**, asking me targeted questions to discover:
+
+1. **Domain Events** – Key things that happen in my business
+2. **User Workflows** – How users interact with the system
+3. **Business Rules** – Constraints and logic
+4. **Pain Points** – Problems to solve
+5. **Opportunities** – Features to build
+6. **MVP Scope** – What to build first
+7. **Post-MVP Features** – What comes later
+
+---
+
+## My Project Idea
+
+{idea}
+
+---
+
+## Your Task
+
+Conduct a **Big Picture Event Storming session** with me by asking questions in the following sequence:
+
+### Phase 1: Domain Discovery (5-7 questions)
+Ask me about the key events that happen in my business domain. Focus on:
+- What are the main activities or processes?
+- Who are the key actors (users, roles)?
+- What triggers these activities?
+- What are the outcomes?
+
+### Phase 2: User Workflows (5-7 questions)
+Ask me about how users interact with the system. Focus on:
+- What does a typical user journey look like?
+- What are the key decision points?
+- What happens when things go wrong?
+- What are the different user types?
+
+### Phase 3: Business Rules & Constraints (3-5 questions)
+Ask me about the rules and logic. Focus on:
+- What business rules must the system enforce?
+- What are the constraints (time, capacity, permissions)?
+- What validations are needed?
+
+### Phase 4: Pain Points & Opportunities (3-5 questions)
+Ask me about problems and improvements. Focus on:
+- What are the current pain points in the process?
+- What manual work could be automated?
+- What would make the biggest impact?
+
+### Phase 5: MVP vs. Post-MVP (3-5 questions)
+Ask me about prioritization. Focus on:
+- What is absolutely essential for the first version?
+- What can wait until later?
+- What would be nice to have but not critical?
+
+---
+
+## Output Format
+
+After I answer all your questions, generate a comprehensive **Event Storming Summary Document** with the following sections:
+
+1. **Domain Overview** – High-level summary of the business domain
+2. **Key Domain Events** – Timeline of major events
+3. **User Workflows** – Step-by-step user journeys
+4. **Actors & Roles** – Who interacts with the system
+5. **Business Rules** – Constraints and logic
+6. **Pain Points** – Problems identified
+7. **Opportunities** – Features to consider
+8. **MVP Scope** – What to build first (prioritized)
+9. **Post-MVP Features** – What to build later (prioritized)
+10. **Open Questions** – Anything still unclear
+
+---
+
+## Important Instructions
+
+- Ask questions **one phase at a time**
+- Wait for my answers before moving to the next phase
+- If my answer is unclear, ask follow-up questions
+- Help me think through edge cases and scenarios
+- Challenge assumptions when appropriate
+- Keep the focus on **what happens** (events), not **how to implement** (technical details)
+
+Begin by asking the **Phase 1: Domain Discovery** questions now.

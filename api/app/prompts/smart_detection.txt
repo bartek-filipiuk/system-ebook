@@ -1,0 +1,22 @@
+Analyze this project idea and determine if Event Storming (business process discovery) is needed.
+
+Project Idea: {idea}
+
+Respond with JSON only:
+{{
+    "use_event_storming": true/false,
+    "feature_count_estimate": number,
+    "has_complex_business_logic": true/false,
+    "reasoning": "brief explanation"
+}}
+
+Use Event Storming if:
+- 4+ features
+- Complex business rules/workflows
+- Multiple user types with different permissions
+- Business process automation
+
+Skip Event Storming if:
+- Simple CRUD app
+- 1-3 features
+- Straightforward user flow
