@@ -450,3 +450,237 @@ Use Event Storming if your project:
 
 <!-- PAGE BREAK -->
 
+## Chapter 5: Phase 1-2 - Generate the PRD
+
+The PRD (Product Requirements Document) is your single source of truth. Everything the AI builds comes from this document. Get it right, and the AI builds exactly what you want. Get it wrong, and you waste hours fixing things.
+
+### The Problem with Vague Requirements
+
+**Traditional approach:**
+- You: "Build me a booking system."
+- AI: "Sure!" (Starts coding)
+- AI builds: Authentication, payment processing, admin dashboard, email notifications, SMS reminders, analytics.
+- You: "I just wanted customers to book appointments. Why did you build all this?"
+- AI: "You didn't say NOT to."
+
+**Framework approach:**
+- You: Use INIT_PROMPT with your one-sentence idea.
+- AI: Asks 15 specific questions.
+- You: Answer all 15 questions.
+- AI: Generates PRD with explicit scope (what IS included) and out-of-scope (what is NOT included).
+- AI builds: Only what's in the PRD. Nothing more. Nothing less.
+
+### The 15 Questions
+
+The AI asks exactly 15 questions designed to extract every critical detail. These questions are grouped by category:
+
+**Vision & Strategy (2 questions)**
+1. What is the ultimate long-term vision for this project?
+2. What business or personal goal does this support?
+
+**Success Metrics (1 question)**
+3. What specific, measurable metric defines success?
+
+**User Stories & Functionality (3 questions)**
+4. What are the core features users need to accomplish their goals?
+5. What are the key user interactions and workflows?
+6. What edge cases or error scenarios must the system handle?
+
+**Non-Functional Requirements (3 questions)**
+7. What are the performance requirements (response times, load capacity)?
+8. What are the security requirements (authentication, data protection)?
+9. What are the usability requirements (responsive design, accessibility)?
+
+**Assumptions & Dependencies (2 questions)**
+10. What assumptions are you making about users, technology, or environment?
+11. What external dependencies does this project rely on?
+
+**Scope (2 questions)**
+12. What features MUST be included in the MVP?
+13. What user stories are must-have vs. nice-to-have?
+
+**Out of Scope (2 questions)**
+14. What features are explicitly OUT of scope for the MVP?
+15. What future enhancements should we NOT build now?
+
+### How to Answer These Questions
+
+**Be specific, not vague:**
+- ❌ Vague: "The app should be fast."
+- ✅ Specific: "API responses under 200ms, page load under 2 seconds."
+
+**Use measurable criteria:**
+- ❌ Vague: "The site should look good."
+- ✅ Measurable: "Lighthouse score 95+, responsive on mobile."
+
+**Be explicit about what's OUT:**
+- ❌ Vague: "We'll add payments later."
+- ✅ Explicit: "No payment processing in MVP. Manual invoicing only."
+
+**Use your Event Storming Summary (if you did one):**
+- MVP Scope → Informs Question 12
+- Post-MVP Features → Informs Question 14
+- Business Rules → Informs Question 10
+
+### The PRD Structure (9 Sections)
+
+After you answer the 15 questions, the AI generates a complete PRD with these sections:
+
+| Section | Purpose | Example |
+|:--------|:--------|:--------|
+| **1. Project Overview & Vision** | Vision statement and problem | "A booking system to reduce salon no-shows by 50%" |
+| **2. Success Metrics** | Measurable outcomes | "Reduce no-shows from 30% to 15% in 3 months" |
+| **3. User Stories** | What users can do | "As a customer, I want to book online so I don't have to call" |
+| **4. Non-Functional Requirements** | Performance, security, usability | "API response time < 200ms, mobile-responsive" |
+| **5. Assumptions & Dependencies** | What we're assuming | "Users have modern browsers, email access" |
+| **6. Scope & Features (MVP)** | What IS included | "✅ Online booking, ✅ Email reminders, ✅ Schedule view" |
+| **7. Out of Scope** | What is NOT included | "❌ Payment processing, ❌ Mobile app, ❌ Reviews" |
+| **8. Open Questions & Risks** | Unresolved items | "Do we support walk-ins? (TBD)" |
+| **9. Change History** | Version tracking | "v1.0 - Initial PRD" |
+
+### Critical: Scope vs. Out of Scope
+
+Sections 6 and 7 are your defense against scope creep.
+
+**Section 6 (Scope)** lists every feature included in the MVP. If it's not listed here, it doesn't get built.
+
+**Section 7 (Out of Scope)** explicitly lists features you are NOT building. This prevents the AI from adding "helpful" extras.
+
+**Example:**
+
+**Scope (Section 6):**
+- ✅ Customer can view services and prices
+- ✅ Customer can book appointments
+- ✅ Customer receives email confirmation
+- ✅ Stylist can view daily schedule
+- ✅ System prevents double-booking
+
+**Out of Scope (Section 7):**
+- ❌ No payment processing (manual invoicing for MVP)
+- ❌ No customer reviews or ratings
+- ❌ No SMS reminders (email only)
+- ❌ No mobile app (web-only)
+- ❌ No multi-location support (single salon only)
+
+The AI uses Section 7 to prevent feature creep. When it's about to build something, it checks: "Is this in Section 6? No. Is it in Section 7? Yes, explicitly out of scope. Don't build it."
+
+### PRD Template (Copy-Paste Ready)
+
+```markdown
+# Product Requirements Document: [Project Name]
+
+## 1. Project Overview & Vision
+- **Vision:** [One sentence describing the ultimate goal]
+- **Problem:** [What pain point does this solve?]
+- **Solution:** [High-level approach]
+
+## 2. Strategic Alignment & Success Metrics
+- **Business Goal:** [Why are we building this?]
+- **Success Metrics:**
+  - [Metric 1: Specific, measurable]
+  - [Metric 2: Specific, measurable]
+
+## 3. User Stories & Functional Requirements
+
+| ID | User Story | Acceptance Criteria | Priority |
+|:---|:-----------|:--------------------|:---------|
+| US-01 | As a [user], I want to [action] so that [benefit] | - [Criteria 1]<br>- [Criteria 2] | Must-Have |
+| US-02 | As a [user], I want to [action] so that [benefit] | - [Criteria 1]<br>- [Criteria 2] | Nice-to-Have |
+
+## 4. Non-Functional Requirements (NFRs)
+
+**Performance:**
+- [Requirement 1: e.g., API response < 200ms]
+- [Requirement 2: e.g., Page load < 2s]
+
+**Security:**
+- [Requirement 1: e.g., HTTPS only]
+- [Requirement 2: e.g., Input validation]
+
+**Usability:**
+- [Requirement 1: e.g., Mobile-responsive]
+- [Requirement 2: e.g., Lighthouse score 95+]
+
+## 5. Assumptions & Dependencies
+
+**Assumptions:**
+- [Assumption 1: e.g., Users have modern browsers]
+- [Assumption 2: e.g., Email delivery works]
+
+**Dependencies:**
+- [Dependency 1: e.g., External API availability]
+- [Dependency 2: e.g., Email service provider]
+
+## 6. Scope & Features (MVP)
+- ✅ [Feature 1]
+- ✅ [Feature 2]
+- ✅ [Feature 3]
+
+## 7. Out of Scope
+- ❌ [Feature NOT included - with brief reason]
+- ❌ [Feature NOT included - with brief reason]
+- ❌ [Feature NOT included - with brief reason]
+
+## 8. Open Questions & Risks
+
+| Question/Risk | Impact | Status |
+|:--------------|:-------|:-------|
+| [Question 1] | High/Medium/Low | Open/Resolved |
+| [Risk 1] | High/Medium/Low | Mitigated/Open |
+
+## 9. Change History
+- **v1.0** - [Date] - Initial PRD
+```
+
+### Example: Hair Salon Booking System PRD (Condensed)
+
+**Section 1: Vision**
+"A web-based booking system to reduce salon no-shows and eliminate phone-based scheduling."
+
+**Section 2: Success Metrics**
+- Reduce no-shows from 30% to 15% within 3 months
+- Handle 80% of bookings online (vs. 0% currently)
+
+**Section 3: User Stories (Condensed)**
+- US-01: As a customer, I want to view available time slots so I can book at my convenience (Must-Have)
+- US-02: As a customer, I want to receive email confirmation so I remember my appointment (Must-Have)
+- US-03: As a stylist, I want to view my daily schedule so I know my appointments (Must-Have)
+
+**Section 4: NFRs**
+- Performance: Page load < 2s, API response < 200ms
+- Security: HTTPS only, input validation, no sensitive data stored
+- Usability: Mobile-responsive, accessible (WCAG AA)
+
+**Section 6: Scope**
+✅ View services, ✅ Book appointments, ✅ Email confirmations, ✅ Stylist schedule view, ✅ Double-booking prevention
+
+**Section 7: Out of Scope**
+❌ Payment processing, ❌ Reviews, ❌ SMS, ❌ Mobile app, ❌ Multi-location
+
+### Checklist: Is Your PRD Complete?
+
+Before moving to the next phase, verify:
+
+- [ ] All 15 questions answered with specific details
+- [ ] Success metrics are measurable (not "improve performance" but "API < 200ms")
+- [ ] User stories have clear acceptance criteria
+- [ ] Out of Scope section explicitly lists what you're NOT building
+- [ ] No technical implementation details (those come in Tech Stack phase)
+- [ ] Every must-have feature is listed in Scope section
+
+### What Happens Next
+
+You save the PRD as `PRODUCT_REQUIREMENTS_DOCUMENT.md`. This becomes your single source of truth.
+
+Every decision the AI makes from now on references this document. "Should I add authentication?" → Check PRD. "Is it in Scope? No. Is it in Out of Scope? Yes. Don't build it."
+
+**Time invested:** 20-25 minutes (15 min answering questions + 5-10 min reviewing PRD)
+
+**Time saved:** 3-6 hours of building the wrong thing and reworking.
+
+**Next:** Generate the Tech Stack based on the PRD.
+
+---
+
+<!-- PAGE BREAK -->
+
