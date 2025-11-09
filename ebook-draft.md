@@ -213,3 +213,240 @@ Not a prototype. Not a proof-of-concept. A production-ready MVP.
 
 <!-- PAGE BREAK -->
 
+## Chapter 3: Phase 0 - Define Your Idea
+
+Before you use any prompts, before you open your AI tool, you need one thing: a clear project idea.
+
+Not a business plan. Not a feature list. Not a technical specification. Just one sentence that describes what you're building.
+
+### The One-Sentence Rule
+
+Your project idea must fit in one sentence. If you can't describe it in one sentence, it's not clear enough yet.
+
+**Good examples:**
+- "An online booking system for a hair salon where customers can book appointments and stylists can manage schedules."
+- "A dashboard that displays real-time cryptocurrency prices from an external API."
+- "A task management app where teams can create projects, assign tasks, and track completion."
+
+**Bad examples:**
+- "A booking system." (Too vague - what kind? Who uses it?)
+- "I want to build something like Calendly but better with more features and also maybe some AI." (Not one sentence, unclear scope)
+- "A platform." (Meaningless without context)
+
+### The Quick Decision: Simple or Complex?
+
+Once you have your one-sentence idea, ask yourself:
+
+**Does this involve complex business processes, multiple user roles, or workflows?**
+
+→ **YES**: Use Event Storming (Phase 0.5) before moving to the PRD.
+
+Examples: booking systems, e-commerce, project management, multi-tenant SaaS.
+
+→ **NO**: Skip Event Storming and go straight to INIT_PROMPT (Phase 1).
+
+Examples: landing pages, simple dashboards, single-feature tools, APIs without complex business logic.
+
+### Phase 0 Checklist
+
+Before proceeding, verify:
+
+- [ ] Your idea fits in one sentence
+- [ ] You know who will use the system
+- [ ] You know the primary problem it solves
+- [ ] You've decided: Event Storming (complex) or skip to PRD (simple)
+
+That's it. Five minutes of clarity now saves hours of confusion later.
+
+### Example: Hair Salon Booking System
+
+**One-sentence idea:**
+"An online booking system for a hair salon where customers can book appointments, stylists manage their schedules, and the owner views revenue reports."
+
+**Quick decision:**
+- Complex business process? Yes (booking, scheduling, payments)
+- Multiple user roles? Yes (customer, stylist, owner)
+- Workflows? Yes (booking flow, cancellation flow, reminder flow)
+
+**Decision:** Use Event Storming before creating the PRD.
+
+### Example: Cryptocurrency Dashboard
+
+**One-sentence idea:**
+"A dashboard that displays real-time prices for the top 10 cryptocurrencies using the CoinGecko API."
+
+**Quick decision:**
+- Complex business process? No (just display data)
+- Multiple user roles? No (viewers only)
+- Workflows? No (fetch and display)
+
+**Decision:** Skip Event Storming, go straight to INIT_PROMPT.
+
+### What's Next?
+
+**If complex:** Proceed to Chapter 4 (Event Storming).
+
+**If simple:** Skip to Chapter 5 (Generate the PRD).
+
+---
+
+<!-- PAGE BREAK -->
+
+## Chapter 4: Phase 0.5 - Event Storming (Optional)
+
+Event Storming is for complex business applications. If your project involves multiple user roles, business workflows, or domain logic, spend 45-90 minutes here. You'll save days of rework later.
+
+If your project is simple (a landing page, a dashboard, a single-feature tool), skip this chapter and go to Chapter 5.
+
+### What Event Storming Does
+
+Traditional approach: You describe your idea vaguely. The AI guesses at requirements. You build. Realize it's wrong. Rebuild.
+
+Event Storming approach: The AI asks 25-35 targeted questions about your business domain. You answer. The AI generates a complete business model with MVP scope defined. You build it right the first time.
+
+### The 5-Phase Questioning Structure
+
+The AI acts as a facilitator and asks questions in five phases:
+
+**Phase 1: Domain Discovery (5-7 questions)**
+- What are the main activities in your business?
+- Who are the key actors (users, roles)?
+- What triggers these activities?
+- What are the outcomes?
+
+**Phase 2: User Workflows (5-7 questions)**
+- What does a typical user journey look like?
+- What are the decision points?
+- What happens when things go wrong?
+- How do different user types interact?
+
+**Phase 3: Business Rules & Constraints (3-5 questions)**
+- What rules must the system enforce?
+- What are the constraints (time, capacity, permissions)?
+- What validations are needed?
+
+**Phase 4: Pain Points & Opportunities (3-5 questions)**
+- What are the current problems?
+- What manual work could be automated?
+- What would make the biggest impact?
+
+**Phase 5: MVP vs. Post-MVP (3-5 questions)**
+- What is absolutely essential for the first version?
+- What can wait until later?
+- What would be nice to have but not critical?
+
+### What You Get: The Event Storming Summary
+
+After you answer all questions, the AI generates a comprehensive document with 10 sections:
+
+1. **Domain Overview** - High-level summary of your business
+2. **Key Domain Events** - Timeline of what happens in your system
+3. **User Workflows** - Step-by-step user journeys
+4. **Actors & Roles** - Who interacts with the system
+5. **Business Rules** - Constraints and logic the system must enforce
+6. **Pain Points** - Problems identified
+7. **Opportunities** - Features to consider
+8. **MVP Scope** - What to build first (prioritized)
+9. **Post-MVP Features** - What to build later (prioritized)
+10. **Open Questions** - Anything still unclear
+
+### Example: Hair Salon Booking System
+
+**Your one-sentence idea:**
+"An online booking system for a hair salon where customers can book appointments, stylists manage schedules, and the owner views revenue reports."
+
+**Phase 1 - Domain Discovery (AI asks):**
+- What types of services does the salon offer?
+- Walk me through what happens from booking to completion.
+- Who are the key actors in this system?
+- What triggers the booking process?
+- What happens after an appointment is completed?
+
+**You answer each question. The AI moves to Phase 2.**
+
+**Phase 2 - User Workflows (AI asks):**
+- What does a customer's booking journey look like?
+- How do stylists manage their availability?
+- What happens if a customer cancels?
+- What are the different user types and their needs?
+
+**You answer. AI continues through all 5 phases.**
+
+**What the AI generates (condensed example):**
+
+```markdown
+# Event Storming Summary: Hair Salon Booking System
+
+## MVP Scope (Build First)
+✅ Customer can view services and prices
+✅ Customer can see available time slots
+✅ Customer can book an appointment
+✅ Customer receives email confirmation
+✅ Stylist can view their schedule
+✅ Stylist can mark availability
+✅ System prevents double-booking
+✅ Owner can view basic revenue report
+✅ Automated reminder 24 hours before appointment
+✅ Customer can cancel (with 24-hour rule)
+
+## Out of MVP (Post-MVP Features)
+❌ Payment processing (manual for MVP)
+❌ Customer reviews/ratings
+❌ SMS reminders
+❌ Mobile app
+❌ Loyalty program
+❌ Multi-location support
+```
+
+### How This Feeds Into the PRD
+
+The Event Storming Summary becomes your reference when answering the 15 PRD questions:
+
+- **MVP Scope** → Becomes "Scope & Features" in PRD
+- **Post-MVP Features** → Becomes "Out of Scope" in PRD
+- **Business Rules** → Becomes "Assumptions & Dependencies" in PRD
+- **Pain Points** → Informs "Problem Statement" in PRD
+- **User Workflows** → Becomes "User Stories" in PRD
+
+You don't copy-paste. You use it to inform your answers. The result: a PRD grounded in real business understanding.
+
+### When to Skip Event Storming
+
+Skip if your project:
+- Has no business logic (just displays data)
+- Has one user type with a simple workflow
+- Is a technical tool (API, library, utility)
+- Has crystal-clear requirements already
+
+Use Event Storming if your project:
+- Involves multiple user roles
+- Has business workflows (booking, ordering, approvals)
+- Needs to solve real business problems
+- Has unclear or evolving requirements
+
+### Time Investment
+
+- **Event Storming session:** 45-90 minutes
+- **Review summary:** 10 minutes
+- **Total:** ~1-2 hours
+
+**Value:** Prevents 1-3 days of building the wrong thing.
+
+### Quick Reference: When to Use
+
+| Project Type | Use Event Storming? |
+|:-------------|:-------------------|
+| Booking system | ✅ Yes |
+| E-commerce platform | ✅ Yes |
+| Task management app | ✅ Yes |
+| Landing page | ❌ No |
+| Simple dashboard | ❌ No |
+| REST API (no business logic) | ❌ No |
+| Portfolio website | ❌ No |
+
+**Next:** Whether you used Event Storming or not, you're now ready to generate the PRD.
+
+---
+
+<!-- PAGE BREAK -->
+
