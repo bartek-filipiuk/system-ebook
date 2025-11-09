@@ -1063,3 +1063,244 @@ You save the Handoff Plan as `HANDOFF_STAGES_PLAN.md`. Now you have all three do
 
 <!-- PAGE BREAK -->
 
+## Chapter 8: Phase 5-7 - Execution with Stage Gates
+
+Planning is complete. Now the AI builds. But it doesn't build blindly. Stage gates ensure the AI asks clarifying questions before each major phase, preventing over-engineering and scope creep.
+
+### The Problem: Unchecked Execution
+
+**Without stage gates:**
+- AI completes Stage 1 (Setup)
+- AI immediately starts Stage 2 (Backend)
+- AI builds 10 endpoints, authentication, caching, logging, rate limiting
+- You: "I only needed 3 endpoints. Why did you build all this?"
+- AI: "You didn't tell me not to."
+
+**With stage gates:**
+- AI completes Stage 1
+- AI stops and asks: "Before building the backend, I need clarification: Should I include authentication in this stage?"
+- You: "No, that's out of scope per the PRD."
+- AI: "Understood. I'll build only the 3 endpoints listed in the PRD."
+- AI builds exactly what you need.
+
+### What is a Stage Gate?
+
+A stage gate is a mandatory pause between stages where the AI asks 3-5 clarifying questions specific to the upcoming work.
+
+**Purpose:**
+- Prevents assumptions
+- Prevents over-engineering
+- Ensures implementation matches your vision
+- Provides a checkpoint for review
+
+**When it happens:**
+After completing all tasks in a stage, before starting the next stage.
+
+### The Stage Gate Flow
+
+```
+Stage 1: Setup
+  [x] All tasks complete
+        ↓
+    STAGE GATE (AI asks 3-5 questions about Stage 2)
+        ↓
+    You answer questions
+        ↓
+Stage 2: Backend Development
+  [ ] Tasks begin (with your clarifications in mind)
+```
+
+### Example Stage Gate Questions
+
+**Before Backend Stage:**
+1. "Should I include user authentication in this stage, or is that out of scope per Section 7?"
+2. "What HTTP status codes should we return for validation errors?"
+3. "Do you want comprehensive logging for all API requests, or minimal logging?"
+4. "Should I add rate limiting to the API endpoints?"
+5. "How should we handle database connection errors?"
+
+**Before Frontend Stage:**
+1. "Should we show loading spinners or skeleton screens while data loads?"
+2. "How should we handle API timeout errors (retry, show error, redirect)?"
+3. "Do you want form validation to happen on blur or on submit?"
+4. "Should error messages be inline or in a toast notification?"
+
+**Before Integration Stage:**
+1. "Should the frontend poll the backend for updates, or is one-time fetch sufficient?"
+2. "How should we handle CORS issues if they arise?"
+3. "Do you want to mock the backend during frontend development, or connect immediately?"
+
+### The Pattern: Specific Implementation Questions
+
+Notice: Stage gate questions are NOT about requirements (those are in the PRD). They're about **implementation details** that the PRD doesn't specify.
+
+**Not in PRD:** Which HTTP status code for errors? (Implementation detail)
+
+**In PRD:** System must validate booking data. (Requirement)
+
+**Stage gate question:** "Should validation errors return 400 or 422 status codes?"
+
+This keeps the PRD focused on WHAT to build, while stage gates handle HOW to build it.
+
+### How to Answer Stage Gate Questions
+
+**Be decisive:**
+- Don't say "whatever you think is best"
+- Pick an option: "Use 400 for all client errors"
+- Reference the PRD when relevant: "Per Section 7, no rate limiting for MVP"
+
+**When you don't know:**
+- Ask the AI for a recommendation: "What's standard practice?"
+- Make a decision based on AI's suggestion
+- Document it for consistency
+
+**Keep answers brief:**
+- One sentence per answer
+- Be specific: "Show loading spinners" not "make it look nice"
+
+### Time Investment per Stage Gate
+
+- **AI asks 3-5 questions:** 30 seconds
+- **You read and answer:** 3-4 minutes
+- **Total:** ~5 minutes per gate
+
+**For 5 stages = ~25 minutes total across entire project**
+
+**Value:** Prevents 2-4 hours of removing over-engineered features or fixing wrong implementation choices.
+
+### Execution Pattern
+
+The full execution flow looks like this:
+
+**Phase 5: Execute Stage 1**
+- AI works through all tasks
+- Checks off each checkbox: [x]
+- Time: 15-30 minutes
+
+**Phase 6: Stage Gate #1**
+- AI asks 3-5 questions about Stage 2
+- You answer
+- Time: 5 minutes
+
+**Phase 7: Execute Stage 2**
+- AI works through all tasks with your clarifications
+- Checks off checkboxes
+- Time: 30-60 minutes
+
+**Repeat:** Phases 6-7 for each remaining stage (Stage 3, 4, 5...)
+
+### What Gets Built
+
+As the AI works:
+- **Checkboxes get marked:** [x] Create database model
+- **You can track progress:** "Stage 2, Task 2.3, 75% complete"
+- **Code gets written:** Actual working implementation
+- **Tests get written:** Unit tests as specified in checkboxes
+- **Documentation gets created:** READMEs, API docs, etc.
+
+### How to Monitor Progress
+
+The Handoff Plan becomes a living document:
+
+**Before execution:**
+```markdown
+Stage 2: Backend Development
+Task 2.1: Database Setup
+  [ ] Create database models
+  [ ] Write migrations
+  [ ] Seed test data
+```
+
+**During execution:**
+```markdown
+Stage 2: Backend Development
+Task 2.1: Database Setup
+  [x] Create database models
+  [x] Write migrations
+  [ ] Seed test data  ← Currently working on this
+```
+
+**After completion:**
+```markdown
+Stage 2: Backend Development
+Task 2.1: Database Setup
+  [x] Create database models
+  [x] Write migrations
+  [x] Seed test data
+```
+
+### What to Review Between Stages
+
+After each stage completes:
+
+1. **Test what was built:** Run the code, verify it works
+2. **Review checkboxes:** Ensure all are truly complete
+3. **Check PRD alignment:** Does it match Section 6 (Scope)?
+4. **Update Handoff Plan:** Mark all completed checkboxes as [x]
+
+**Don't rush.** Take 5-10 minutes to verify before proceeding to the next gate.
+
+### Common Stage Gate Questions by Stage Type
+
+**Setup/Infrastructure Stages:**
+- Which package manager versions?
+- Where should config files live?
+- What environment variables are needed?
+
+**Backend Stages:**
+- What error response format?
+- What logging level?
+- What test coverage threshold?
+
+**Frontend Stages:**
+- What loading state UX?
+- What error handling UX?
+- What responsive breakpoints?
+
+**Integration Stages:**
+- How to handle API failures?
+- What retry logic?
+- What caching strategy?
+
+**Testing/Polish Stages:**
+- What test scenarios to prioritize?
+- What documentation to include?
+- What performance benchmarks?
+
+### When Stage Gates Save You
+
+**Scenario 1: Preventing Authentication Overreach**
+- AI about to build login system
+- Gate question: "Should I implement authentication?"
+- You: "No, explicitly out of scope in PRD Section 7"
+- **Saved:** 2 hours of removing auth code
+
+**Scenario 2: Clarifying Error Handling**
+- AI about to build error handling
+- Gate question: "Should errors show in modals or inline?"
+- You: "Inline, below the form field"
+- **Saved:** 1 hour of reworking error UI
+
+**Scenario 3: Avoiding Over-Testing**
+- AI about to write tests
+- Gate question: "Should I write integration tests or just unit tests?"
+- You: "Unit tests only for MVP per time constraints"
+- **Saved:** 2 hours of integration test setup
+
+### Execution Complete
+
+After all stages:
+- ✅ All 100-150 checkboxes marked complete
+- ✅ Working code implementing exactly what's in the PRD
+- ✅ Tests passing
+- ✅ Documentation complete
+- ✅ Zero scope creep (stage gates prevented it)
+
+**Total execution time:** 2-6 hours depending on project complexity
+
+**Next:** How to pause and resume work without losing context.
+
+---
+
+<!-- PAGE BREAK -->
+
