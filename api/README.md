@@ -163,12 +163,26 @@ pytest --cov=app
 - [x] LangFuse integration throughout
 - [x] Error handling and logging
 
-## Next Steps (Phase 4)
+## Phase 4 Status ✅
 
-- [ ] REST API endpoints (projects CRUD)
-- [ ] Background task execution
-- [ ] Error responses and validation
-- [ ] OpenAPI documentation
+- [x] REST API endpoints (projects CRUD)
+- [x] POST /api/v1/projects - Create project
+- [x] POST /api/v1/projects/{id}/start-workflow - Start workflow (background)
+- [x] GET /api/v1/projects/{id} - Get project status
+- [x] GET /api/v1/projects/{id}/documents - Get all documents
+- [x] GET /api/v1/projects/{id}/documents/{type} - Get single document
+- [x] GET /api/v1/projects/{id}/costs - Get cost breakdown
+- [x] Background task execution (FastAPI BackgroundTasks)
+- [x] Error responses and HTTP exceptions
+- [x] Rate limiting (per endpoint)
+- [x] OpenAPI/Swagger documentation (auto-generated)
+
+## Next Steps (Phase 5)
+
+- [ ] WebSocket endpoint for real-time progress
+- [ ] WebSocket connection manager
+- [ ] Broadcast phase events to connected clients
+- [ ] Integration with workflow engine
 
 ## License
 

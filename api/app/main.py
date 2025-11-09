@@ -79,9 +79,16 @@ async def root() -> dict:
     }
 
 
-# Include routers (will be added in Phase 4)
-# from app.api.v1 import projects, websocket
-# app.include_router(projects.router, prefix=settings.API_V1_PREFIX, tags=["projects"])
+# Include routers
+from app.api.v1 import projects
+
+app.include_router(
+    projects.router,
+    prefix=f"{settings.API_V1_PREFIX}/projects",
+    tags=["projects"],
+)
+# WebSocket router will be added in Phase 5
+# from app.api.v1 import websocket
 # app.include_router(websocket.router, prefix=settings.API_V1_PREFIX, tags=["websocket"])
 
 
