@@ -7,6 +7,7 @@ from uuid import UUID
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.websocket_manager import manager as ws_manager
 from app.db.models import Project
 from app.services.langfuse_service import LangFuseTracker, is_langfuse_enabled
 from app.workflow.document_storage import save_document
@@ -40,6 +41,7 @@ class WorkflowEngine:
         self.db = db
         self.project_id = project_id
         self.tracker: Optional[LangFuseTracker] = None
+        self.start_time: Optional[datetime] = None
 
     async def _get_project(self) -> Project:
         """Get project from database.
@@ -86,6 +88,83 @@ class WorkflowEngine:
 
         await self.db.commit()
 
+    async def _broadcast_phase_started(self, phase: WorkflowPhase, message: str) -> None:
+        """Broadcast phase started event via WebSocket.
+
+        Args:
+            phase: Workflow phase
+            message: Human-readable message
+
+        """
+        await ws_manager.broadcast(
+            self.project_id,
+            {
+                "type": "phase_started",
+                "phase": phase.value,
+                "message": message,
+            },
+        )
+
+    async def _broadcast_phase_completed(
+        self, phase: WorkflowPhase, duration_seconds: int, cost_usd: float
+    ) -> None:
+        """Broadcast phase completed event via WebSocket.
+
+        Args:
+            phase: Workflow phase
+            duration_seconds: Phase duration in seconds
+            cost_usd: Phase cost in USD
+
+        """
+        await ws_manager.broadcast(
+            self.project_id,
+            {
+                "type": "phase_completed",
+                "phase": phase.value,
+                "duration_seconds": duration_seconds,
+                "cost_usd": round(cost_usd, 6),
+            },
+        )
+
+    async def _broadcast_phase_failed(self, phase: WorkflowPhase, error: str) -> None:
+        """Broadcast phase failed event via WebSocket.
+
+        Args:
+            phase: Workflow phase
+            error: Error message
+
+        """
+        await ws_manager.broadcast(
+            self.project_id,
+            {
+                "type": "phase_failed",
+                "phase": phase.value,
+                "error": error,
+                "retry_available": True,
+            },
+        )
+
+    async def _broadcast_workflow_completed(
+        self, total_duration_seconds: int, total_cost_usd: float, documents_generated: int
+    ) -> None:
+        """Broadcast workflow completed event via WebSocket.
+
+        Args:
+            total_duration_seconds: Total workflow duration in seconds
+            total_cost_usd: Total workflow cost in USD
+            documents_generated: Number of documents generated
+
+        """
+        await ws_manager.broadcast(
+            self.project_id,
+            {
+                "type": "workflow_completed",
+                "total_duration_seconds": total_duration_seconds,
+                "total_cost_usd": round(total_cost_usd, 6),
+                "documents_generated": documents_generated,
+            },
+        )
+
     async def execute_workflow(self) -> bool:
         """Execute the complete workflow.
 
@@ -96,6 +175,9 @@ class WorkflowEngine:
         try:
             # Get project
             project = await self._get_project()
+
+            # Track start time
+            self.start_time = datetime.utcnow()
 
             # Initialize LangFuse tracker if enabled
             if is_langfuse_enabled():
@@ -111,10 +193,28 @@ class WorkflowEngine:
             logger.info(f"Starting workflow for project {self.project_id}")
 
             # Phase 0: Smart Detection
+            await self._broadcast_phase_started(
+                WorkflowPhase.SMART_DETECTION,
+                "Analyzing project complexity and determining workflow approach...",
+            )
+            phase_start = datetime.utcnow()
             smart_detection_result = await self._run_smart_detection(project.idea)
             if not smart_detection_result.success:
+                await self._broadcast_phase_failed(
+                    WorkflowPhase.SMART_DETECTION,
+                    smart_detection_result.error_message or "Smart detection failed",
+                )
                 await self._handle_workflow_failure(smart_detection_result.error_message)
                 return False
+
+            # Broadcast Smart Detection completion
+            phase_duration = int((datetime.utcnow() - phase_start).total_seconds())
+            phase_cost = smart_detection_result.llm_response.cost_usd if smart_detection_result.llm_response else 0.0
+            await self._broadcast_phase_completed(
+                WorkflowPhase.SMART_DETECTION,
+                phase_duration,
+                phase_cost,
+            )
 
             use_event_storming = smart_detection_result.output_data.get("use_event_storming", False)
 
@@ -133,10 +233,28 @@ class WorkflowEngine:
                     WorkflowPhase.EVENT_STORMING,
                 )
 
+                await self._broadcast_phase_started(
+                    WorkflowPhase.EVENT_STORMING,
+                    "Running Event Storming to discover business domain and events...",
+                )
+                phase_start = datetime.utcnow()
                 event_storming_result = await self._run_event_storming(project.idea)
                 if not event_storming_result.success:
+                    await self._broadcast_phase_failed(
+                        WorkflowPhase.EVENT_STORMING,
+                        event_storming_result.error_message or "Event Storming failed",
+                    )
                     await self._handle_workflow_failure(event_storming_result.error_message)
                     return False
+
+                # Broadcast Event Storming completion
+                phase_duration = int((datetime.utcnow() - phase_start).total_seconds())
+                phase_cost = event_storming_result.llm_response.cost_usd if event_storming_result.llm_response else 0.0
+                await self._broadcast_phase_completed(
+                    WorkflowPhase.EVENT_STORMING,
+                    phase_duration,
+                    phase_cost,
+                )
 
                 event_storming_summary = event_storming_result.output_data.get("event_storming_md")
 
@@ -155,10 +273,28 @@ class WorkflowEngine:
                 WorkflowPhase.PRD,
             )
 
+            await self._broadcast_phase_started(
+                WorkflowPhase.PRD,
+                "Generating Product Requirements Document (PRD)...",
+            )
+            phase_start = datetime.utcnow()
             prd_result = await self._run_prd_generation(project.idea, event_storming_summary)
             if not prd_result.success:
+                await self._broadcast_phase_failed(
+                    WorkflowPhase.PRD,
+                    prd_result.error_message or "PRD generation failed",
+                )
                 await self._handle_workflow_failure(prd_result.error_message)
                 return False
+
+            # Broadcast PRD completion
+            phase_duration = int((datetime.utcnow() - phase_start).total_seconds())
+            phase_cost = prd_result.llm_response.cost_usd if prd_result.llm_response else 0.0
+            await self._broadcast_phase_completed(
+                WorkflowPhase.PRD,
+                phase_duration,
+                phase_cost,
+            )
 
             prd_md = prd_result.output_data.get("prd_md")
 
@@ -177,10 +313,28 @@ class WorkflowEngine:
                 WorkflowPhase.TECH_STACK,
             )
 
+            await self._broadcast_phase_started(
+                WorkflowPhase.TECH_STACK,
+                "Determining optimal tech stack and architecture...",
+            )
+            phase_start = datetime.utcnow()
             tech_stack_result = await self._run_tech_stack(prd_md)
             if not tech_stack_result.success:
+                await self._broadcast_phase_failed(
+                    WorkflowPhase.TECH_STACK,
+                    tech_stack_result.error_message or "Tech stack generation failed",
+                )
                 await self._handle_workflow_failure(tech_stack_result.error_message)
                 return False
+
+            # Broadcast Tech Stack completion
+            phase_duration = int((datetime.utcnow() - phase_start).total_seconds())
+            phase_cost = tech_stack_result.llm_response.cost_usd if tech_stack_result.llm_response else 0.0
+            await self._broadcast_phase_completed(
+                WorkflowPhase.TECH_STACK,
+                phase_duration,
+                phase_cost,
+            )
 
             tech_stack_md = tech_stack_result.output_data.get("tech_stack_md")
 
@@ -199,10 +353,28 @@ class WorkflowEngine:
                 WorkflowPhase.EXECUTION_PLAN,
             )
 
+            await self._broadcast_phase_started(
+                WorkflowPhase.EXECUTION_PLAN,
+                "Creating detailed execution plan with stage gates...",
+            )
+            phase_start = datetime.utcnow()
             execution_plan_result = await self._run_execution_plan(prd_md, tech_stack_md)
             if not execution_plan_result.success:
+                await self._broadcast_phase_failed(
+                    WorkflowPhase.EXECUTION_PLAN,
+                    execution_plan_result.error_message or "Execution plan generation failed",
+                )
                 await self._handle_workflow_failure(execution_plan_result.error_message)
                 return False
+
+            # Broadcast Execution Plan completion
+            phase_duration = int((datetime.utcnow() - phase_start).total_seconds())
+            phase_cost = execution_plan_result.llm_response.cost_usd if execution_plan_result.llm_response else 0.0
+            await self._broadcast_phase_completed(
+                WorkflowPhase.EXECUTION_PLAN,
+                phase_duration,
+                phase_cost,
+            )
 
             execution_plan_md = execution_plan_result.output_data.get("execution_plan_md")
             approach = execution_plan_result.output_data.get("approach", "HORIZONTAL")
@@ -243,6 +415,14 @@ class WorkflowEngine:
                     status="completed",
                     documents_generated=documents_generated,
                 )
+
+            # Broadcast workflow completion
+            documents_generated = 4 if use_event_storming else 3
+            await self._broadcast_workflow_completed(
+                total_duration,
+                total_cost,
+                documents_generated,
+            )
 
             logger.info(f"Workflow completed successfully for project {self.project_id}")
             return True
@@ -319,6 +499,16 @@ class WorkflowEngine:
         await self._update_project_status(
             WorkflowStatus.FAILED,
             metadata={"error": error_message},
+        )
+
+        # Broadcast workflow failure
+        await ws_manager.broadcast(
+            self.project_id,
+            {
+                "type": "workflow_failed",
+                "error": error_message or "Unknown error occurred",
+                "timestamp": datetime.utcnow().isoformat(),
+            },
         )
 
         if self.tracker:

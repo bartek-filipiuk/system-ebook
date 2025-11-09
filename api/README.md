@@ -177,12 +177,27 @@ pytest --cov=app
 - [x] Rate limiting (per endpoint)
 - [x] OpenAPI/Swagger documentation (auto-generated)
 
-## Next Steps (Phase 5)
+## Phase 5 Status ✅
 
-- [ ] WebSocket endpoint for real-time progress
-- [ ] WebSocket connection manager
-- [ ] Broadcast phase events to connected clients
-- [ ] Integration with workflow engine
+- [x] WebSocket connection manager
+- [x] WebSocket endpoint (ws://host/api/v1/projects/{id}/progress)
+- [x] Broadcast phase events (started, completed, failed)
+- [x] Broadcast workflow completion with totals
+- [x] Integration with workflow engine (all phases)
+- [x] Error handling with WebSocket notifications
+- [x] Ping/pong keep-alive support
+
+## WebSocket Event Types
+
+Clients can connect to `ws://localhost:8000/api/v1/projects/{project_id}/progress` to receive real-time updates:
+
+- `connected` - Initial connection confirmation
+- `phase_started` - Phase started with message
+- `phase_completed` - Phase completed with duration and cost
+- `phase_failed` - Phase failed with error message
+- `workflow_completed` - Workflow finished with totals
+- `workflow_failed` - Workflow failed with error
+- `pong` - Response to ping (keep-alive)
 
 ## License
 

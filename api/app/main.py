@@ -80,16 +80,20 @@ async def root() -> dict:
 
 
 # Include routers
-from app.api.v1 import projects
+from app.api.v1 import projects, websocket
 
 app.include_router(
     projects.router,
     prefix=f"{settings.API_V1_PREFIX}/projects",
     tags=["projects"],
 )
-# WebSocket router will be added in Phase 5
-# from app.api.v1 import websocket
-# app.include_router(websocket.router, prefix=settings.API_V1_PREFIX, tags=["websocket"])
+
+# WebSocket router for real-time progress updates
+app.include_router(
+    websocket.router,
+    prefix=settings.API_V1_PREFIX,
+    tags=["websocket"],
+)
 
 
 # Global exception handler
