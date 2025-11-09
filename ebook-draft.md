@@ -1304,3 +1304,872 @@ After all stages:
 
 <!-- PAGE BREAK -->
 
+## Chapter 9: Phase 8 - Pause & Resume
+
+You don't finish projects in one sitting. You work for two hours, stop for a meeting, come back later. Or you build for a day, resume the next morning. Without the framework, you waste 15-20 minutes re-explaining everything. With the framework, you resume in 2 minutes with zero context loss.
+
+### The Problem: Lost Context
+
+**Traditional approach:**
+- You: "Continue where we left off."
+- AI: "What project are we working on?"
+- You: *Explains the project again*
+- AI: "What have we built so far?"
+- You: *Lists what's done*
+- AI: "What should I work on next?"
+- You: *Explains next steps*
+- **Time wasted:** 15-20 minutes
+
+**Framework approach:**
+- You: Use CONTINUE_PROMPT with three documents
+- AI: "I've reviewed the context. Last completed: Stage 2, Task 2.3. Next task: Stage 3, Task 3.1 - Create Landing Page UI. Shall I proceed?"
+- You: "Yes."
+- **Time wasted:** 2 minutes
+
+### The CONTINUE_PROMPT Pattern
+
+The CONTINUE_PROMPT is a structured way to restore full context. You paste three documents:
+
+1. **PRD** (what you're building)
+2. **Tech Stack** (how you're building it)
+3. **Handoff Plan with progress** (what's done, what's next)
+
+The AI reads all three and instantly knows everything.
+
+### What to Include
+
+**Document 1: Full PRD**
+- All 9 sections
+- No modifications needed
+- This tells the AI what you're building and why
+
+**Document 2: Full Tech Stack**
+- All technology choices
+- All justifications
+- This tells the AI how you're building it
+
+**Document 3: Handoff Plan with Progress**
+- All stages and tasks
+- Checkboxes marked [x] for completed items
+- Checkboxes unmarked [ ] for pending items
+- This tells the AI what's done and what's next
+
+### How It Works
+
+You paste the CONTINUE_PROMPT with all three documents into your AI tool. The AI:
+
+1. **Loads the PRD** → Understands project scope and requirements
+2. **Loads the Tech Stack** → Understands technology choices
+3. **Loads the Handoff Plan** → Sees progress (60 checkboxes done, 90 remaining)
+4. **Identifies last completed task** → "Stage 2, Task 2.3 - Write unit tests"
+5. **Identifies next task** → "Stage 3, Task 3.1 - Create landing page UI"
+6. **Asks for confirmation** → "Shall I proceed with Task 3.1?"
+
+You confirm. The AI continues exactly where you left off.
+
+### Example: Resuming After Overnight Break
+
+**What you do:**
+1. Open CONTINUE_PROMPT template
+2. Paste full PRD
+3. Paste full Tech Stack
+4. Paste Handoff Plan with all completed tasks marked [x]
+5. Send to AI
+
+**AI response:**
+> "I've reviewed the project context. Here's the current state:
+>
+> **Project:** Hair Salon Booking System
+>
+> **Last completed task:** Stage 2, Task 2.4 - Write Backend Unit Tests (all checkboxes complete)
+>
+> **Next task:** Stage 3, Task 3.1 - Create Landing Page UI
+>
+> This task involves:
+> - Create main page component
+> - Add Tailwind CSS styling
+> - Create header with salon name
+> - Add "Book Appointment" CTA button
+> - Ensure mobile-responsive design
+>
+> Should I proceed with this task?"
+
+**You:** "Yes, proceed."
+
+**AI:** *Starts building exactly what's needed, with full context*
+
+### When to Use CONTINUE_PROMPT
+
+**Use it when:**
+- Resuming work after a break (overnight, lunch, meeting)
+- Switching to a new AI session
+- Starting work on a different device
+- Need to bring someone else up to speed
+- Context feels lost or AI seems confused
+
+**Don't need it when:**
+- Working continuously in the same session
+- AI still has full context from earlier in the conversation
+
+### Time Saved
+
+**Without framework:**
+- Re-explaining project: 5 minutes
+- Listing what's done: 5 minutes
+- Explaining next steps: 5 minutes
+- AI asking clarifying questions: 5 minutes
+- **Total:** 15-20 minutes per resume
+
+**With framework:**
+- Paste CONTINUE_PROMPT: 1 minute
+- AI reviews and responds: 1 minute
+- **Total:** 2 minutes per resume
+
+**If you resume 3 times during a project:** Save 45-60 minutes
+
+### The Magic: Zero Context Loss
+
+The three documents contain everything:
+- PRD → What and why
+- Tech Stack → How and with what
+- Handoff Plan → Where you are
+
+No detail is lost. No decision is forgotten. The AI knows as much on Day 2 as it did on Day 1.
+
+### Checklist: Before Pausing Work
+
+When you need to stop working:
+
+- [ ] Save all three documents (PRD, Tech Stack, Handoff Plan)
+- [ ] Mark all completed checkboxes as [x] in the Handoff Plan
+- [ ] Note where you stopped (optional, for your reference)
+- [ ] Close your session
+
+That's it. When you return, use CONTINUE_PROMPT to restore everything instantly.
+
+**Next:** Putting it all together.
+
+---
+
+<!-- PAGE BREAK -->
+
+## Chapter 10: Putting It All Together
+
+You now have the complete framework. Let's review the full workflow, time investment, and how to avoid common pitfalls.
+
+### The Complete 8-Phase Workflow
+
+Here's the end-to-end process:
+
+```
+Phase 0: Define Your Idea (5-10 min)
+   ↓ [Output: One-sentence project description]
+   ↓
+Phase 0.5: Event Storming - OPTIONAL (45-90 min)
+   ↓ [Output: Business process map, MVP scope]
+   ↓
+Phase 1: Requirements Gathering (15-20 min)
+   ↓ [AI asks 15 questions]
+   ↓
+Phase 2: Generate PRD (5-10 min)
+   ↓ [Output: 9-section PRD document]
+   ↓
+Phase 3: Define Tech Stack (10-15 min)
+   ↓ [Output: Tech Stack document with justifications]
+   ↓
+Phase 4: Create Execution Plan (5-10 min)
+   ↓ [Output: Handoff Plan with 100-150 checkboxes]
+   ↓
+Phase 5-7: Execute with Stage Gates (2-6 hours)
+   ↓ [Execute → Gate → Execute → Gate → ...]
+   ↓
+Phase 8: Pause & Resume (2 min per resume)
+   ↓ [Use CONTINUE_PROMPT as needed]
+   ↓
+✅ WORKING MVP
+```
+
+**Total time:** 4-8 hours for most MVPs.
+
+### Time Investment Breakdown
+
+**Planning Time:**
+- Without Event Storming: 40-60 minutes
+- With Event Storming: 90-150 minutes
+
+**Execution Time:**
+- Simple project (1-3 features): 2-4 hours
+- Complex project (4-6 features): 4-6 hours
+- Large project (7+ features): 6-8 hours
+
+**Stage Gates (built into execution):**
+- 5 minutes per gate × 5 stages = 25 minutes total
+
+**Resume Time (if needed):**
+- 2 minutes per resume × 3 resumes = 6 minutes total
+
+**Example Timeline for Salon Booking System:**
+- Phase 0: Define Idea (5 min)
+- Phase 0.5: Event Storming (60 min)
+- Phase 1-2: Requirements + PRD (25 min)
+- Phase 3: Tech Stack (12 min)
+- Phase 4: Execution Plan (8 min)
+- Phase 5-7: Execution (5 hours including stage gates)
+- Phase 8: Resume twice (4 min)
+- **Total: 6 hours 54 minutes**
+
+### What You Get at the End
+
+**Three Documents:**
+1. PRD - The single source of truth (what to build)
+2. Tech Stack - Technology choices (how to build)
+3. Handoff Plan - Execution roadmap (step-by-step)
+
+**Working Code:**
+- Functional MVP implementing exactly what's in the PRD
+- No scope creep (stage gates prevented it)
+- No over-engineering (tech stack matched requirements)
+- No missing features (100-150 checkboxes ensured completeness)
+
+**Tests:**
+- Unit tests for critical functionality
+- Integration tests if specified in PRD
+
+**Documentation:**
+- README with setup instructions
+- API documentation (if applicable)
+- Architecture notes
+
+**Ready to ship** or iterate based on user feedback.
+
+### Common Pitfalls and How to Avoid Them
+
+**Pitfall 1: Skipping Event Storming for Complex Projects**
+- **Symptom:** You're unclear about requirements, business rules, or user workflows
+- **Fix:** If your project has 4+ features or complex business logic, do Event Storming (Phase 0.5)
+- **Cost of skipping:** 2-4 hours reworking the PRD when you realize requirements were unclear
+
+**Pitfall 2: Vague PRD**
+- **Symptom:** AI asks too many questions during execution, builds wrong features
+- **Fix:** Answer all 15 PRD questions thoroughly. Use specific examples. Be explicit about scope AND out-of-scope.
+- **Cost of vagueness:** 3-5 hours removing unwanted features and adding missing ones
+
+**Pitfall 3: Over-Engineering the Tech Stack**
+- **Symptom:** AI suggests microservices, Redis, Kubernetes for a simple MVP
+- **Fix:** Every technology choice must reference a PRD requirement. If the PRD doesn't require it, don't add it.
+- **Cost of over-engineering:** 2-4 hours learning and configuring unnecessary tech
+
+**Pitfall 4: Too Few Checkboxes**
+- **Symptom:** Handoff Plan has 30-40 checkboxes for a complex project
+- **Fix:** Break tasks down further. "Build backend" → 20 specific checkboxes. Aim for 100-150 total.
+- **Cost of vague plan:** 2-3 hours debugging missing functionality
+
+**Pitfall 5: Skipping Stage Gates**
+- **Symptom:** AI builds too much, wrong implementation, scope creep
+- **Fix:** Stop after each stage. Let AI ask 3-5 clarifying questions. Answer them decisively.
+- **Cost of skipping gates:** 2-4 hours removing over-engineered features
+
+**Pitfall 6: Not Using CONTINUE_PROMPT**
+- **Symptom:** After resuming, AI is confused, asks basic questions, rebuilds things
+- **Fix:** Always use CONTINUE_PROMPT with all three documents when resuming work
+- **Cost of not using it:** 15-20 minutes per resume × 3 resumes = 1 hour wasted
+
+**Pitfall 7: Changing Requirements Mid-Execution**
+- **Symptom:** "Actually, can we add authentication?" (when it's out of scope in PRD)
+- **Fix:** If requirements change, stop execution. Update the PRD. Regenerate affected parts of Handoff Plan. Then resume.
+- **Cost of ad-hoc changes:** 1-2 hours fixing inconsistencies between code and PRD
+
+**Pitfall 8: Ignoring the PRD During Execution**
+- **Symptom:** AI builds features not in the PRD, or misses features that are in it
+- **Fix:** Reference the PRD constantly. Every stage gate, every checkpoint: "Does this match Section 6 of the PRD?"
+- **Cost of ignoring PRD:** 3-6 hours of rework
+
+### The Framework vs. Traditional Development
+
+Let's compare one final time:
+
+**Traditional Approach:**
+- Start coding immediately
+- Requirements emerge during development
+- Build features AI thinks you need
+- Discover missing features at the end
+- Rework and remove scope creep
+- **Total time:** 12-20 hours (6-14 hours wasted)
+
+**Framework Approach:**
+- Invest 40-150 min in planning
+- Execute with clear roadmap
+- Build only what PRD specifies
+- Stage gates prevent overreach
+- Zero scope creep
+- **Total time:** 4-8 hours (30-70% time saved)
+
+**The math:**
+- **Upfront investment:** 1-2.5 hours
+- **Time saved during execution:** 6-14 hours
+- **Net time saved:** 4-12 hours per project
+
+**Over 10 projects:** 40-120 hours saved (1-3 weeks of work)
+
+### Your Framework Checklist
+
+Before starting your next project, verify you have:
+
+**Phase 0:**
+- [ ] One-sentence project description
+- [ ] Decision: Simple or complex?
+- [ ] Decision: Event Storming or skip to PRD?
+
+**Phase 0.5 (if applicable):**
+- [ ] Event Storming session complete
+- [ ] 10-section Event Storming Summary document
+- [ ] MVP scope identified
+
+**Phase 1-2:**
+- [ ] All 15 PRD questions answered
+- [ ] PRD with all 9 sections complete
+- [ ] Scope section lists 5-10 concrete features
+- [ ] Out-of-Scope section lists what NOT to build
+- [ ] Success criteria defined (Section 2)
+
+**Phase 3:**
+- [ ] Tech Stack document with 3 sections (Frontend, Backend, Infrastructure)
+- [ ] Every technology choice has PRD justification
+- [ ] No over-engineering (nothing that doesn't map to a requirement)
+
+**Phase 4:**
+- [ ] Handoff Plan with 5-7 stages
+- [ ] 100-150 checkboxes total (adjust for project size)
+- [ ] Approach chosen: Horizontal or Vertical
+- [ ] Each checkbox is specific and verifiable
+
+**Phase 5-7:**
+- [ ] Stage gate questions answered for each stage
+- [ ] Checkboxes marked [x] as work completes
+- [ ] Code built matches PRD exactly
+- [ ] Tests written per Handoff Plan
+
+**Phase 8:**
+- [ ] All three documents saved (PRD, Tech Stack, Handoff Plan)
+- [ ] CONTINUE_PROMPT used when resuming
+- [ ] Progress tracked in Handoff Plan
+
+### Are You Ready to Start?
+
+You have everything you need:
+- ✅ A structured 8-phase process
+- ✅ Templates for every document
+- ✅ Stage gates to prevent mistakes
+- ✅ Continuity system to avoid context loss
+- ✅ Proven approach that saves 30-70% of development time
+
+**Your next steps:**
+
+1. **Start with a simple project first** (1-3 features) to learn the framework
+2. **Use the templates in the Appendix** (all prompts are provided verbatim)
+3. **Follow the phases in order** (don't skip the planning)
+4. **Be disciplined with stage gates** (don't let AI run wild)
+5. **Track progress religiously** (mark those checkboxes)
+
+**After 1-2 projects using this framework:**
+- You'll internalize the process
+- Planning will become automatic
+- You'll spot scope creep instantly
+- You'll ship MVPs in 4-8 hours consistently
+
+**After 5-10 projects:**
+- The framework becomes second nature
+- You'll adapt it to your specific needs
+- You'll have saved 40-120 hours of development time
+- You'll have shipped more products than you thought possible
+
+### One Final Thought
+
+The difference between developers who ship and developers who don't isn't talent. It's structure.
+
+This framework gives you structure. Use it. Trust the process. Build with clarity.
+
+**Now go build something.** 🚀
+
+---
+
+<!-- PAGE BREAK -->
+
+## Appendix: Quick Reference
+
+This appendix contains everything you need to start using the framework immediately: decision trees, all prompts verbatim, and key templates.
+
+### Quick Start Flowchart
+
+```
+START: Do you have a project idea?
+   ↓
+   YES
+   ↓
+Step 1: Write one-sentence description
+   ↓
+Step 2: Is your project complex (4+ features, business logic)?
+   ↓
+   YES → Run EVENT_STORMING_PROMPT (45-90 min)
+   NO → Skip to Step 3
+   ↓
+Step 3: Run INIT_PROMPT → Answer 15 questions (15-20 min)
+   ↓
+Step 4: AI generates PRD → Review & approve (5-10 min)
+   ↓
+Step 5: Run TECH_STACK_PROMPT with PRD (10-15 min)
+   ↓
+Step 6: AI generates Tech Stack → Review & approve (5 min)
+   ↓
+Step 7: Run STAGES_PROMPT with PRD + Tech Stack (5-10 min)
+   ↓
+Step 8: AI generates Handoff Plan → Review & approve (5 min)
+   ↓
+Step 9: Execute Stage 1 → AI works through checkboxes
+   ↓
+Step 10: Run STAGE_GATE_PROMPT → Answer 3-5 questions
+   ↓
+Step 11: Execute next stage → Repeat steps 9-10 for all stages
+   ↓
+Step 12: If you need to pause → Use CONTINUE_PROMPT to resume
+   ↓
+✅ DONE: Working MVP in 4-8 hours
+```
+
+### Decision Tree: Should I Use Event Storming?
+
+```
+Q1: Does your project have 4+ features?
+   ↓
+   YES → Use Event Storming
+   NO → Continue to Q2
+   ↓
+Q2: Does your project involve complex business logic?
+   ↓
+   YES → Use Event Storming
+   NO → Continue to Q3
+   ↓
+Q3: Are you unclear about requirements?
+   ↓
+   YES → Use Event Storming
+   NO → Skip Event Storming, go to INIT_PROMPT
+```
+
+### Decision Tree: Horizontal vs. Vertical Development?
+
+```
+Q1: How many features does your project have?
+   ↓
+   1-3 features → Use HORIZONTAL (default STAGES_PROMPT)
+   4+ features → Continue to Q2
+   ↓
+Q2: Do you need to demo progress early?
+   ↓
+   YES → Use VERTICAL
+   NO → Continue to Q3
+   ↓
+Q3: Is integration complex or risky?
+   ↓
+   YES → Use VERTICAL (safer, continuous integration)
+   NO → Either approach works (choose VERTICAL when in doubt)
+```
+
+---
+
+<!-- PAGE BREAK -->
+
+### All Prompts (Copy-Paste Ready)
+
+#### 0. EVENT_STORMING_PROMPT (Optional)
+
+**When to use:** Before INIT_PROMPT, if your project involves complex business processes, multiple user types, or workflows.
+
+```
+You are an expert business analyst and Event Storming facilitator. Your task is to help me explore my business domain through a structured Event Storming session.
+
+I will play the role of the **business stakeholder/client**, and you will act as the **facilitator**, asking me targeted questions to discover:
+
+1. **Domain Events** – Key things that happen in my business
+2. **User Workflows** – How users interact with the system
+3. **Business Rules** – Constraints and logic
+4. **Pain Points** – Problems to solve
+5. **Opportunities** – Features to build
+6. **MVP Scope** – What to build first
+7. **Post-MVP Features** – What comes later
+
+---
+
+## My Project Idea
+
+[INSERT YOUR PROJECT IDEA HERE - Can be 1-3 sentences]
+
+**Example:** "I want to build an online booking system for a hair salon where customers can book appointments, stylists can manage their schedules, and the owner can see revenue reports."
+
+---
+
+## Your Task
+
+Conduct a **Big Picture Event Storming session** with me by asking questions in the following sequence:
+
+### Phase 1: Domain Discovery (5-7 questions)
+Ask me about the key events that happen in my business domain. Focus on:
+- What are the main activities or processes?
+- Who are the key actors (users, roles)?
+- What triggers these activities?
+- What are the outcomes?
+
+### Phase 2: User Workflows (5-7 questions)
+Ask me about how users interact with the system. Focus on:
+- What does a typical user journey look like?
+- What are the key decision points?
+- What happens when things go wrong?
+- What are the different user types?
+
+### Phase 3: Business Rules & Constraints (3-5 questions)
+Ask me about the rules and logic. Focus on:
+- What business rules must the system enforce?
+- What are the constraints (time, capacity, permissions)?
+- What validations are needed?
+
+### Phase 4: Pain Points & Opportunities (3-5 questions)
+Ask me about problems and improvements. Focus on:
+- What are the current pain points in the process?
+- What manual work could be automated?
+- What would make the biggest impact?
+
+### Phase 5: MVP vs. Post-MVP (3-5 questions)
+Ask me about prioritization. Focus on:
+- What is absolutely essential for the first version?
+- What can wait until later?
+- What would be nice to have but not critical?
+
+---
+
+## Output Format
+
+After I answer all your questions, generate a comprehensive **Event Storming Summary Document** with the following sections:
+
+1. **Domain Overview** – High-level summary of the business domain
+2. **Key Domain Events** – Timeline of major events
+3. **User Workflows** – Step-by-step user journeys
+4. **Actors & Roles** – Who interacts with the system
+5. **Business Rules** – Constraints and logic
+6. **Pain Points** – Problems identified
+7. **Opportunities** – Features to consider
+8. **MVP Scope** – What to build first (prioritized)
+9. **Post-MVP Features** – What to build later (prioritized)
+10. **Open Questions** – Anything still unclear
+
+---
+
+## Important Instructions
+
+- Ask questions **one phase at a time**
+- Wait for my answers before moving to the next phase
+- If my answer is unclear, ask follow-up questions
+- Help me think through edge cases and scenarios
+- Challenge assumptions when appropriate
+- Keep the focus on **what happens** (events), not **how to implement** (technical details)
+
+Begin by asking the **Phase 1: Domain Discovery** questions now.
+```
+
+---
+
+#### 1. INIT_PROMPT
+
+**When to use:** At the very beginning of a new project.
+
+```
+You are an expert AI software architect and project manager. Your task is to guide me through a structured process to define and plan a new software project for an AI coding agent to build.
+
+We will follow a multi-stage process:
+1.  **PRD Generation:** You will first help me create a detailed Product Requirements Document (PRD).
+2.  **Tech Stack Definition:** Based on the PRD, you will define the technology stack.
+3.  **Staged Plan:** Finally, you will create a step-by-step execution plan with stages and checklists.
+
+Let's begin with **Step 1: PRD Generation.**
+
+My initial project idea is: **[INSERT YOUR ONE-SENTENCE PROJECT IDEA HERE]**
+
+Based on this idea, your immediate and only task is to ask me exactly **15 clarifying questions** to gather all necessary details for a comprehensive PRD. The questions must be designed to extract information for all sections of the PRD, including:
+
+- Project Vision & Strategic Goals
+- Measurable Success Metrics
+- Specific User Stories and their Acceptance Criteria
+- Key Non-Functional Requirements (Performance, Security, etc.)
+- Assumptions and potential Dependencies
+- What is explicitly IN and OUT of scope for the MVP
+- Any known Risks or Open Questions
+
+Do not ask fewer or more than 15 questions. After I provide the answers, you will then generate the complete PRD document.
+
+Begin by asking the 15 questions now.
+```
+
+---
+
+#### 2. TECH_STACK_PROMPT
+
+**When to use:** After the PRD has been successfully generated.
+
+```
+Excellent. The PRD is now complete and provides a clear picture of the project's requirements.
+
+Now, let's move to **Step 2: Tech Stack Definition.**
+
+Based *only* on the PRD we just created, your task is to generate a `TECH_STACK_DOCUMENT.md`. This document must detail the technologies, frameworks, and infrastructure for the project.
+
+Use the provided PRD as your single source of truth. The document must follow the established schema, including sections for Frontend, Backend, and Infrastructure/DevOps. For every technology choice, you must provide a concise justification in the table, directly referencing a requirement from the PRD (e.g., "Chosen for its high performance to meet the <150ms NFR.").
+
+Finally, include a simple Mermaid diagram illustrating the high-level architecture.
+
+Here is the complete PRD for your reference:
+
+---
+[PASTE THE FULL PRD MARKDOWN HERE]
+---
+
+Generate the Tech Stack document now.
+```
+
+---
+
+<!-- PAGE BREAK -->
+
+#### 3. STAGES_PROMPT
+
+**When to use:** After the Tech Stack document has been generated.
+
+**Note:** If you prefer vertical-slice (iterative, feature-by-feature) development instead of the default horizontal approach, use the vertical-slice variant instead of this prompt.
+
+```
+Perfect. The Tech Stack is defined.
+
+Now for the final planning step before coding: **Step 3: Staged Handoff Plan.**
+
+Your task is to create a `HANDOFF_STAGES_PLAN.md` document. This document will break down the entire development process into logical, sequential stages. Each stage must contain a list of specific, actionable tasks, and each task must be broken down further into verifiable sub-tasks formatted as checkboxes.
+
+The plan must be so clear and granular that an AI coding agent can follow it from start to finish without ambiguity. The stages should logically progress from project setup, to backend development, to frontend development, to final integration and documentation.
+
+Use the PRD and the Tech Stack documents as your only guides.
+
+Here are the documents for your reference:
+
+**PRD:**
+---
+[PASTE THE FULL PRD MARKDOWN HERE]
+---
+
+**Tech Stack:**
+---
+[PASTE THE FULL TECH STACK MARKDOWN HERE]
+---
+
+Generate the Staged Handoff Plan now.
+```
+
+---
+
+#### 4. STAGE_GATE_PROMPT
+
+**When to use:** When the AI agent completes all tasks in a stage and is ready to move to the next.
+
+```
+You have successfully completed all tasks for **Stage [CURRENT STAGE NUMBER]: [CURRENT STAGE NAME]**.
+
+Before proceeding to **Stage [NEXT STAGE NUMBER]: [NEXT STAGE NAME]**, you must ask me **3 to 5 clarifying questions** specific to the goals of the upcoming stage. These questions should be designed to resolve any potential ambiguities and ensure your implementation plan for this stage is efficient and precisely aligned with the PRD.
+
+Here are the goals for the next stage:
+
+[LIST THE GOAL AND KEY TASKS FOR THE NEXT STAGE FROM THE HANDOFF PLAN]
+
+Do not start work on the next stage until I have answered your questions.
+
+Ask the stage-gate questions now.
+```
+
+---
+
+#### 5. CONTINUE_PROMPT
+
+**When to use:** When you are resuming work on a project after a pause.
+
+```
+We are resuming work on the **"[PROJECT NAME]"** project.
+
+I am providing you with the full project context, including the PRD, the Tech Stack, and the Handoff Plan with its current progress. Your task is to:
+
+1.  Thoroughly review all provided documents to fully load the project context.
+2.  Acknowledge the current state by summarizing the last task that was completed.
+3.  State the very next sub-task on the checklist that needs to be executed.
+4.  Wait for my confirmation before you proceed with executing that next task.
+
+Here is the complete project context:
+
+**1. Product Requirements Document (PRD):**
+---
+[PASTE FULL PRD CONTENT HERE]
+---
+
+**2. Tech Stack & Architecture:**
+---
+[PASTE FULL TECH STACK CONTENT HERE]
+---
+
+**3. Handoff & Stages Plan (Current Progress):**
+---
+[PASTE HANDOFF/STAGES CONTENT HERE, WITH [x] MARKING ALL COMPLETED SUB-TASKS]
+---
+
+Please review the context and state the next step. Do not take any action until I confirm.
+```
+
+---
+
+<!-- PAGE BREAK -->
+
+### Key Templates Summary
+
+#### PRD Structure (9 Sections)
+
+```markdown
+# Product Requirements Document: [Project Name]
+
+## 1. Project Overview & Vision
+- Vision: [One sentence]
+- Problem: [What pain point does this solve?]
+- Solution: [High-level approach]
+
+## 2. Strategic Alignment & Success Metrics
+- Business Goals: [3-5 goals]
+- Success Metrics: [5-7 quantifiable metrics]
+
+## 3. Target Users & Personas
+- Primary User: [Description]
+- Secondary Users: [If applicable]
+
+## 4. User Stories & Acceptance Criteria
+- User Story 1: As a [user], I want [goal] so that [reason]
+  - Acceptance: [Specific criteria]
+- [Repeat for 5-10 core stories]
+
+## 5. Functional Requirements by Feature
+- Feature 1: [Name]
+  - Description: [What it does]
+  - Requirements: [Detailed list]
+- [Repeat for all features]
+
+## 6. Scope & In-Scope Features (MVP)
+- ✅ Feature A
+- ✅ Feature B
+- [List all in-scope features]
+
+## 7. Explicitly Out-of-Scope (Post-MVP)
+- ❌ Feature X (Phase 2)
+- ❌ Feature Y (Phase 3)
+- [List all explicitly excluded features]
+
+## 8. Non-Functional Requirements
+- Performance: [Specific metrics]
+- Security: [Requirements]
+- Usability: [Standards]
+- Scalability: [Limits]
+
+## 9. Assumptions, Dependencies, Risks
+- Assumptions: [List]
+- Dependencies: [External factors]
+- Risks: [Potential issues]
+- Open Questions: [Unresolved items]
+```
+
+#### Tech Stack Structure (3 Sections)
+
+```markdown
+# Tech Stack Document: [Project Name]
+
+## Frontend
+
+| Technology | Version | Justification (PRD Reference) |
+|:-----------|:--------|:------------------------------|
+| [Framework] | [X.X] | [Why this choice? Link to PRD requirement] |
+| [Library 1] | [X.X] | [Justification] |
+| [Library 2] | [X.X] | [Justification] |
+
+## Backend
+
+| Technology | Version | Justification (PRD Reference) |
+|:-----------|:--------|:------------------------------|
+| [Framework] | [X.X] | [Why this choice? Link to PRD requirement] |
+| [Database] | [X.X] | [Justification] |
+| [Library] | [X.X] | [Justification] |
+
+## Infrastructure & DevOps
+
+| Technology | Version | Justification (PRD Reference) |
+|:-----------|:--------|:------------------------------|
+| [Deployment] | [X.X] | [Why this choice? Link to PRD requirement] |
+| [CI/CD] | [X.X] | [Justification] |
+```
+
+#### Handoff Plan Structure (5-7 Stages)
+
+```markdown
+# Handoff & Stages Plan: [Project Name]
+
+## Stage 1: [Stage Name]
+**Goal:** [Clear objective for this stage]
+
+Task 1.1: [Task Name]
+  [ ] Subtask 1
+  [ ] Subtask 2
+  [ ] Subtask 3
+
+Task 1.2: [Task Name]
+  [ ] Subtask 1
+  [ ] Subtask 2
+
+[Repeat for all tasks in stage]
+
+## Stage 2: [Stage Name]
+[Same structure]
+
+## Stage 3: [Stage Name]
+[Same structure]
+
+[Continue for 5-7 stages total]
+```
+
+### Time Budget Reference
+
+| Phase | Time Investment |
+|:------|:----------------|
+| Phase 0: Define Idea | 5-10 minutes |
+| Phase 0.5: Event Storming (optional) | 45-90 minutes |
+| Phase 1: Answer 15 Questions | 15-20 minutes |
+| Phase 2: Review PRD | 5-10 minutes |
+| Phase 3: Review Tech Stack | 10-15 minutes |
+| Phase 4: Review Handoff Plan | 5-10 minutes |
+| **Total Planning** | **40-150 minutes** |
+| Phase 5-7: Execution | 2-6 hours |
+| Phase 8: Resume (if needed) | 2 min per resume |
+| **Total Project** | **4-8 hours** |
+
+### Common Pitfalls Checklist
+
+Before starting execution, verify:
+
+- [ ] PRD has clear Scope (Section 6) AND Out-of-Scope (Section 7)
+- [ ] Every tech choice in Tech Stack references a PRD requirement
+- [ ] Handoff Plan has 100-150 checkboxes (not 30-40)
+- [ ] You've chosen Horizontal or Vertical approach consciously
+- [ ] You're prepared to stop at stage gates (don't skip them)
+- [ ] You have all three documents saved for CONTINUE_PROMPT
+- [ ] You know where to find these prompts when you need them
+
+**You're ready. Go build.** ✅
+
+---
+
+<!-- END OF EBOOK -->
+
