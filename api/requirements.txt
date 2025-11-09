@@ -20,6 +20,7 @@ python-dotenv==1.0.0
 
 # Rate Limiting
 slowapi==0.1.9
+redis==5.0.1  # Optional: For distributed rate limiting in production
 
 # HTTP Client for OpenRouter
 httpx==0.26.0

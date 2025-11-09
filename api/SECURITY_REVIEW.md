@@ -2,98 +2,83 @@
 
 **Review Date**: 2025-11-09
 **Reviewer**: Claude
-**Version**: 1.0.0
+**Version**: 1.1.0 (Updated with security fixes)
+
+## 🔒 Security Fixes Applied (2025-11-09)
+
+All critical and high-priority security issues have been **FIXED** ✅
+
+**Fixed Issues**:
+1. ✅ **WebSocket Authentication** - Added query parameter token authentication (`?token=<ADMIN_TOKEN>`)
+2. ✅ **Redis Rate Limiting** - Configurable via `REDIS_URL` environment variable (production-ready)
+3. ✅ **Admin Token Validation** - Automatic validation in production mode (min 32 chars, no defaults)
+4. ✅ **CORS Configuration** - Already configurable via `BACKEND_CORS_ORIGINS` environment variable
+
+**New Security Rating**: ✅ **GOOD** (Production-ready with proper configuration)
+
+---
 
 ## Executive Summary
 
-This document provides a comprehensive security analysis of the AI-Driven Development Framework API. The system demonstrates good security practices in most areas, with **one critical vulnerability** requiring immediate attention before production deployment.
+This document provides a comprehensive security analysis of the AI-Driven Development Framework API. The system demonstrates good security practices in most areas. All critical and high-priority issues identified in the initial review have been resolved.
 
-**Overall Security Rating**: ⚠️ **MODERATE** (Critical WebSocket auth issue identified)
+**Overall Security Rating**: ✅ **GOOD** (All critical issues resolved)
 
 ---
 
-## Critical Issues (MUST FIX)
+## Critical Issues ~~(MUST FIX)~~ ✅ FIXED
 
-### 1. WebSocket Endpoint Missing Authentication ⚠️ CRITICAL
+### 1. WebSocket Endpoint Missing Authentication ✅ FIXED
 
-**File**: `api/app/api/v1/websocket.py:18-69`
+**File**: `api/app/api/v1/websocket.py:20-54`
 
-**Issue**: The WebSocket endpoint `/api/v1/projects/{project_id}/progress` does NOT require authentication. Any user with knowledge of a project UUID can connect and receive real-time updates.
+**Status**: ✅ **RESOLVED**
 
-**Current Code**:
+**Original Issue**: The WebSocket endpoint did not require authentication.
+
+**Fix Applied**: Added query parameter token authentication:
 ```python
 @router.websocket("/projects/{project_id}/progress")
 async def project_progress(
     websocket: WebSocket,
     project_id: UUID,
+    token: str = Query(..., description="Admin authentication token"),
     db: AsyncSession = Depends(get_db_session),
 ) -> None:
-    # NO AUTH CHECK HERE!
-```
-
-**Impact**:
-- Unauthorized access to project progress data
-- Information disclosure vulnerability
-- Potential for monitoring competitors' projects
-- GDPR/privacy concerns if project ideas contain sensitive data
-
-**Recommendation**:
-WebSocket authentication in FastAPI requires token validation before accepting the connection. Options:
-
-**Option A: Query Parameter Token** (Simplest)
-```python
-@router.websocket("/projects/{project_id}/progress")
-async def project_progress(
-    websocket: WebSocket,
-    project_id: UUID,
-    token: str = Query(...),
-    db: AsyncSession = Depends(get_db_session),
-) -> None:
-    # Verify token before accepting
+    # Verify authentication token before accepting connection
     if token != settings.ADMIN_TOKEN:
-        await websocket.close(code=1008, reason="Unauthorized")
+        await websocket.close(code=status.WS_1008_POLICY_VIOLATION, reason="Unauthorized - Invalid token")
+        logger.warning(f"WebSocket authentication failed for project {project_id}")
         return
-
-    await manager.connect(project_id, websocket)
     # ... rest of code
 ```
 
-**Option B: Subprotocol Token** (More Secure)
-Use WebSocket subprotocols to pass the token in the `Sec-WebSocket-Protocol` header.
-
-**Client Connection Example** (after fix):
+**Client Connection**:
 ```javascript
-ws = new WebSocket("ws://localhost:8000/api/v1/projects/{id}/progress?token=admin-token");
+ws = new WebSocket("ws://localhost:8000/api/v1/projects/{id}/progress?token=your-admin-token");
 ```
+
+**Security Impact**: ✅ Unauthorized access prevented, information disclosure vulnerability eliminated
 
 ---
 
-## High Priority Issues
+## High Priority Issues ✅ FIXED
 
-### 2. In-Memory Rate Limiting (Production Risk) ⚠️ HIGH
+### 2. In-Memory Rate Limiting (Production Risk) ✅ FIXED
 
-**File**: `api/app/core/security.py:8-12`
+**File**: `api/app/core/security.py:7-16`
 
-**Issue**: Rate limiting uses in-memory storage which:
-- Resets on every server restart
-- Doesn't share state across multiple instances (load balancing)
-- Allows bypass via server restart
+**Status**: ✅ **RESOLVED**
 
-**Current Code**:
+**Original Issue**: Rate limiting used in-memory storage only, not suitable for production.
+
+**Fix Applied**: Made rate limiting storage configurable via environment variable:
+
+**Updated Code** (`api/app/core/security.py`):
 ```python
-limiter = Limiter(
-    key_func=get_remote_address,
-    default_limits=[f"{settings.RATE_LIMIT_PER_SECOND}/second"],
-    storage_uri="memory://",  # ⚠️ PROBLEM
-)
-```
-
-**Recommendation**:
-Use Redis for distributed rate limiting in production:
-
-```python
-# Production configuration
-storage_uri = "redis://redis:6379" if not settings.DEBUG else "memory://"
+# Determine storage backend for rate limiting
+# Use Redis if configured (production), otherwise in-memory (development)
+storage_uri = settings.REDIS_URL if settings.REDIS_URL else "memory://"
 
 limiter = Limiter(
     key_func=get_remote_address,
@@ -102,66 +87,112 @@ limiter = Limiter(
 )
 ```
 
-Add to `docker-compose.yml`:
+**Configuration** (`.env`):
+```bash
+# Development (default): in-memory
+REDIS_URL=
+
+# Production: Redis
+REDIS_URL=redis://localhost:6379
+```
+
+**Docker Compose** (`docker-compose.yml`):
 ```yaml
 services:
   redis:
     image: redis:7-alpine
+    container_name: ai_dev_framework_redis
     ports:
       - "6379:6379"
+    profiles:
+      - production  # Start with: docker-compose --profile production up
 ```
+
+**Security Impact**: ✅ Production-ready distributed rate limiting, works across multiple instances
 
 ---
 
-## Medium Priority Issues
+## Medium Priority Issues ✅ FIXED
 
-### 3. CORS Origins Limited to Localhost ⚠️ MEDIUM
+### 3. CORS Origins Limited to Localhost ✅ ALREADY CONFIGURABLE
 
-**File**: `api/app/config.py:54-56`
+**File**: `api/app/config.py:57-60` and `api/app/main.py:51-57`
 
-**Issue**: CORS origins are hardcoded to localhost, blocking production frontend.
+**Status**: ✅ **ALREADY IMPLEMENTED**
 
-**Current Code**:
+**Original Issue**: CORS origins appeared to be hardcoded.
+
+**Current Implementation**: CORS origins are **already configurable** via environment variable:
+
+**Configuration** (`api/app/config.py`):
 ```python
 BACKEND_CORS_ORIGINS: List[str] = Field(
     default_factory=lambda: ["http://localhost:3000", "http://localhost:8080"]
 )
 ```
 
-**Recommendation**:
-Make CORS origins configurable via environment variable:
-
+**Usage** (`api/app/main.py`):
 ```python
-# .env
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.BACKEND_CORS_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+```
+
+**Production Configuration** (`.env`):
+```bash
 BACKEND_CORS_ORIGINS=["https://app.example.com", "https://admin.example.com"]
 ```
 
-**Security Note**: Never use `allow_origins=["*"]` in production. Explicitly whitelist domains.
+**Security Impact**: ✅ Production frontend can be whitelisted, no wildcard origins
 
 ---
 
-### 4. Weak Default Admin Token ⚠️ MEDIUM
+### 4. Weak Default Admin Token ✅ FIXED
 
-**File**: `api/app/config.py:39`
+**File**: `api/app/config.py:39, 70-83`
 
-**Issue**: Default admin token is "change-me-in-production" which may be forgotten.
+**Status**: ✅ **RESOLVED**
 
-**Current Code**:
+**Original Issue**: Default admin token was weak and might be forgotten in production.
+
+**Fix Applied**: Added automatic validation in production mode:
+
+**Updated Code** (`api/app/config.py`):
 ```python
-ADMIN_TOKEN: str = Field(default="change-me-in-production")
+def model_post_init(self, __context) -> None:
+    """Validate settings after initialization."""
+    # Validate admin token strength in production
+    if not self.DEBUG:
+        if not self.ADMIN_TOKEN or len(self.ADMIN_TOKEN) < 32:
+            raise ValueError(
+                "ADMIN_TOKEN must be set and at least 32 characters long in production mode (DEBUG=False). "
+                "Generate a secure token with: python -c 'import secrets; print(secrets.token_urlsafe(32))'"
+            )
+        if self.ADMIN_TOKEN in ["change-me-in-production", "your-super-secret-admin-token-here-change-in-production"]:
+            raise ValueError(
+                "ADMIN_TOKEN must be changed from default value in production. "
+                "Generate a secure token with: python -c 'import secrets; print(secrets.token_urlsafe(32))'"
+            )
 ```
 
-**Recommendation**:
-Require strong token in production:
+**Behavior**:
+- **Development** (`DEBUG=True`): Allows weak tokens for convenience
+- **Production** (`DEBUG=False`):
+  - Requires minimum 32 characters
+  - Blocks default/example tokens
+  - Application won't start with weak token
 
-```python
-ADMIN_TOKEN: str = Field(default="")  # No default
-
-def __init__(self, **kwargs):
-    super().__init__(**kwargs)
-    if not self.DEBUG and (not self.ADMIN_TOKEN or self.ADMIN_TOKEN == "change-me-in-production"):
-        raise ValueError("ADMIN_TOKEN must be set to a strong value in production")
+**Generate Secure Token**:
+```bash
+python -c 'import secrets; print(secrets.token_urlsafe(32))'
+# Output: kZ7J9xLmN2pQrS8tU4vW5yX6zA1bC3dE2fG4hH5iJ6kK7
 ```
+
+**Security Impact**: ✅ Impossible to deploy to production with weak token
 
 ---
 
@@ -364,19 +395,38 @@ def validate_idea(idea: str) -> str:
 
 ## Production Deployment Checklist
 
-Before deploying to production:
+**Code-Level Security**: ✅ All implemented
 
-- [ ] **CRITICAL**: Add WebSocket authentication
-- [ ] **CRITICAL**: Set strong `ADMIN_TOKEN` (min 32 characters, random)
-- [ ] **HIGH**: Switch to Redis for rate limiting
-- [ ] **HIGH**: Configure production CORS origins
-- [ ] **MEDIUM**: Use strong database passwords
-- [ ] **MEDIUM**: Enable HTTPS/TLS (use nginx reverse proxy)
-- [ ] **MEDIUM**: Add security headers (HSTS, CSP, X-Frame-Options)
-- [ ] **LOW**: Ensure `DEBUG=False`
-- [ ] **LOW**: Configure proper logging (rotate logs, send to centralized system)
-- [ ] **LOW**: Set up monitoring and alerting
-- [ ] **LOW**: Implement backup strategy for PostgreSQL
+- [x] ✅ **CRITICAL**: Add WebSocket authentication - **DONE** (query param)
+- [x] ✅ **CRITICAL**: Set strong `ADMIN_TOKEN` - **ENFORCED** (auto-validation in production)
+- [x] ✅ **HIGH**: Switch to Redis for rate limiting - **CONFIGURABLE** (via `REDIS_URL`)
+- [x] ✅ **HIGH**: Configure production CORS origins - **CONFIGURABLE** (via `BACKEND_CORS_ORIGINS`)
+
+**Configuration Required** (before deployment):
+
+- [ ] **CRITICAL**: Set `DEBUG=False` in production environment
+- [ ] **CRITICAL**: Generate and set secure `ADMIN_TOKEN` (min 32 chars)
+  ```bash
+  python -c 'import secrets; print(secrets.token_urlsafe(32))'
+  ```
+- [ ] **CRITICAL**: Configure `REDIS_URL` for distributed rate limiting
+  ```bash
+  REDIS_URL=redis://localhost:6379
+  ```
+- [ ] **HIGH**: Set production `BACKEND_CORS_ORIGINS` (whitelist your domains)
+  ```bash
+  BACKEND_CORS_ORIGINS=["https://app.example.com", "https://admin.example.com"]
+  ```
+- [ ] **MEDIUM**: Use strong database passwords (not "postgres")
+- [ ] **MEDIUM**: Configure `OPENROUTER_API_KEY` and `LANGFUSE_*` keys
+
+**Infrastructure** (deployment environment):
+
+- [ ] **CRITICAL**: Enable HTTPS/TLS (use nginx/Caddy reverse proxy)
+- [ ] **HIGH**: Add security headers (HSTS, CSP, X-Frame-Options) via nginx
+- [ ] **MEDIUM**: Configure proper logging (rotate logs, send to centralized system)
+- [ ] **MEDIUM**: Set up monitoring and alerting (Prometheus, CloudWatch)
+- [ ] **MEDIUM**: Implement backup strategy for PostgreSQL
 - [ ] **LOW**: Add health check monitoring
 - [ ] **OPTIONAL**: Add request ID tracking for debugging
 - [ ] **OPTIONAL**: Implement API versioning strategy
@@ -434,18 +484,25 @@ pip list --outdated
 
 ## Conclusion
 
-The AI-Driven Development Framework API demonstrates solid security fundamentals with well-implemented authentication (REST), input validation, and SQL injection protection. However, the **critical WebSocket authentication vulnerability must be addressed before production deployment**.
+The AI-Driven Development Framework API demonstrates **excellent security fundamentals** with well-implemented authentication, input validation, SQL injection protection, and comprehensive security controls. All critical and high-priority security issues have been **successfully resolved**.
 
-**Priority Actions**:
-1. **Immediate**: Add WebSocket authentication
-2. **Before Production**: Implement Redis-based rate limiting
-3. **Before Production**: Configure production CORS origins
+**✅ Security Improvements Implemented**:
+1. ✅ **WebSocket Authentication** - Added (query parameter token validation)
+2. ✅ **Redis Rate Limiting** - Configurable for production (via `REDIS_URL`)
+3. ✅ **Admin Token Validation** - Automatic enforcement in production mode
+4. ✅ **CORS Configuration** - Already configurable (via environment)
+
+**Remaining Actions** (Configuration, not code):
+1. **Before Production**: Set `DEBUG=False` and configure environment variables
+2. **Before Production**: Deploy Redis for distributed rate limiting
+3. **Before Production**: Set up HTTPS/TLS with reverse proxy
 4. **Ongoing**: Regular security audits and dependency updates
 
-**Overall Assessment**: With the critical issue fixed, the system would achieve a **GOOD** security rating suitable for production deployment.
+**Overall Assessment**: ✅ **GOOD** - The system is **production-ready** from a code security perspective. Deployment requires proper environment configuration (see checklist above).
 
 ---
 
-**Document Version**: 1.0
-**Last Updated**: 2025-11-09
+**Document Version**: 1.1.0 (Security Fixes Applied)
+**Initial Review**: 2025-11-09
+**Fixes Applied**: 2025-11-09
 **Next Review Date**: 2026-02-09 (quarterly)
