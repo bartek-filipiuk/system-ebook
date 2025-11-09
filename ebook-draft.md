@@ -684,3 +684,382 @@ Every decision the AI makes from now on references this document. "Should I add 
 
 <!-- PAGE BREAK -->
 
+## Chapter 6: Phase 3 - Define the Tech Stack
+
+Every technology choice needs a justification. Not "I like this framework" but "This framework meets the < 200ms API response requirement from the PRD."
+
+The Tech Stack document forces the AI to justify every choice by referencing specific requirements from the PRD. No over-engineering. No technology for technology's sake.
+
+### The Problem: Unjustified Tech Choices
+
+**Without the framework:**
+- You: "Build the backend."
+- AI: Chooses a tech stack based on... its training data? Popular trends? Random selection?
+- AI picks: A microservices architecture with Kubernetes, Redis caching, PostgreSQL, message queues, and GraphQL.
+- You: "I just needed a simple API. Why is this so complex?"
+
+**With the framework:**
+- You: Use TECH_STACK_PROMPT with your PRD.
+- AI: Analyzes PRD requirements (performance < 200ms, simple CRUD operations, single-server deployment).
+- AI generates: Tech Stack document with justified choices.
+- Every technology choice references a specific PRD requirement.
+- Result: A stack that matches your needs, not the AI's assumptions.
+
+### The Tech Stack Document Structure
+
+The AI generates a document with three main sections:
+
+**1. Frontend Stack**
+
+| Category | Technology | Version | Justification (PRD Reference) |
+|:---------|:-----------|:--------|:------------------------------|
+| Framework | [Choice] | [Version] | "Chosen to meet NFR: Lighthouse score 95+" |
+| Styling | [Choice] | [Version] | "Chosen for rapid development (PRD: 4-week timeline)" |
+
+**2. Backend Stack**
+
+| Category | Technology | Version | Justification (PRD Reference) |
+|:---------|:-----------|:--------|:------------------------------|
+| Framework | [Choice] | [Version] | "Chosen for performance: < 200ms API response (NFR Section 4)" |
+| Database | [Choice] | [Version] | "Chosen for simplicity: Single-table schema (Scope Section 6)" |
+
+**3. Infrastructure & DevOps**
+
+| Category | Tool | Justification (PRD Reference) |
+|:---------|:-----|:------------------------------|
+| Containerization | [Choice] | "Required by PRD: Easy deployment (Assumption Section 5)" |
+| Hosting | [Choice] | "Chosen for cost: < $20/month (Success Metric Section 2)" |
+
+### Every Choice is Justified
+
+Notice the pattern: Every technology selection includes "Chosen to meet [specific PRD requirement]."
+
+The AI can't just pick popular frameworks. It must justify each choice by pointing to:
+- A performance requirement (NFR Section 4)
+- A scope limitation (Scope Section 6)
+- A business constraint (Success Metrics Section 2)
+- An assumption (Assumptions Section 5)
+
+### Example: Hair Salon Booking System Tech Stack (Condensed)
+
+**Frontend:**
+- Framework: Modern frontend framework → "Chosen for mobile-responsive requirement (NFR: responsive design)"
+- Styling: Utility-first CSS → "Chosen for rapid UI development (MVP timeline: 4 weeks)"
+
+**Backend:**
+- Framework: Fast API framework → "Chosen to meet NFR: API response < 200ms"
+- Database: Relational DB → "Chosen for data relationships (bookings ↔ services ↔ stylists)"
+- ORM: Database toolkit → "Chosen for type safety (PRD NFR: data integrity)"
+
+**Infrastructure:**
+- Containerization: Docker → "Required for easy deployment (PRD Assumption: single-server deployment)"
+- Hosting: Cloud platform → "Chosen for low cost and scalability (Success Metric: operating cost)"
+
+### What This Prevents
+
+**Prevents over-engineering:**
+- PRD says "simple CRUD API" → AI won't suggest microservices
+- PRD says "single salon" → AI won't suggest multi-tenancy architecture
+- PRD says "MVP timeline: 4 weeks" → AI won't suggest complex tech requiring long learning curves
+
+**Prevents under-engineering:**
+- PRD says "API response < 200ms" → AI won't suggest slow frameworks
+- PRD says "handle 1000 concurrent users" → AI won't suggest single-threaded solutions
+- PRD says "real-time updates" → AI will suggest WebSocket or similar
+
+### Architecture Diagram (Optional)
+
+The Tech Stack document may include a simple text-based architecture diagram showing how components connect:
+
+```
+User (Browser)
+    ↓
+Frontend (Port 3000)
+    ↓ (HTTP/HTTPS)
+Backend API (Port 8000)
+    ↓
+Database (Port 5432)
+```
+
+### Time Investment
+
+- **You paste PRD into TECH_STACK_PROMPT:** 1 minute
+- **AI generates Tech Stack document:** 2 minutes
+- **You review and approve:** 2 minutes
+- **Total:** ~5 minutes
+
+**Value:** Prevents hours of debugging incompatible technologies or removing over-engineered solutions.
+
+### Checklist: Is Your Tech Stack Complete?
+
+Before proceeding, verify:
+
+- [ ] Every technology choice has a justification
+- [ ] Every justification references a specific PRD section
+- [ ] No over-engineering (tech matches PRD scope)
+- [ ] No under-engineering (tech meets PRD NFRs)
+- [ ] Architecture is appropriate for project scale
+
+### What Happens Next
+
+You save the Tech Stack document as `TECH_STACK_DOCUMENT.md`. The AI will use this (along with the PRD) to generate the execution plan.
+
+**Next:** Create the staged execution plan with 100-150 checkboxes.
+
+---
+
+<!-- PAGE BREAK -->
+
+## Chapter 7: Phase 4 - Create the Execution Plan
+
+The Handoff Plan breaks your project into 100-150 verifiable checkboxes. Every task is granular, explicit, and trackable. Nothing is forgotten. Nothing is vague.
+
+### The Problem: Vague Plans
+
+**Without the framework:**
+- AI: "I'll build the backend, then the frontend, then integrate them."
+- You: "Sounds good."
+- Two hours later: AI built 8 features you didn't ask for, missed 3 you did, and you have no idea what's done vs. what's left.
+
+**With the framework:**
+- AI generates: A 5-stage plan with 120 checkboxes.
+- You know exactly: What gets built, in what order, and how to verify it's done.
+- Result: Complete visibility. Zero surprises.
+
+### The Two Development Approaches
+
+Before generating the plan, choose your approach:
+
+**Horizontal (Layer-by-Layer):**
+- Stage 1: Setup
+- Stage 2: All backend APIs
+- Stage 3: All frontend pages
+- Stage 4: Integration
+- Stage 5: Testing & docs
+
+**When to use:** Simple projects (1-3 features), straightforward integration.
+
+**Vertical (Feature-by-Feature):**
+- Stage 1: Minimal working installation (basic end-to-end system)
+- Stage 2: Feature A (backend + frontend + integration)
+- Stage 3: Feature B (backend + frontend + integration)
+- Stage 4: Feature C (backend + frontend + integration)
+- Stage 5: Polish & finalization
+
+**When to use:** Projects with 4+ features, need early demos, continuous integration.
+
+### Decision Guide
+
+| Your Situation | Approach |
+|:---------------|:---------|
+| 1-3 features total | Horizontal |
+| 4+ features | Vertical |
+| Need early demos | Vertical |
+| Simple project, fast execution | Horizontal |
+| Complex business app | Vertical |
+| Solo MVP build | Either (your preference) |
+
+**When in doubt:** Use Vertical. It's safer (continuous integration) and more flexible.
+
+### The Handoff Plan Structure
+
+Regardless of approach, the plan has this structure:
+
+**5-7 High-Level Stages** → Each stage has a clear goal
+
+**3-5 Tasks per Stage** → Each task is a logical unit of work
+
+**3-7 Checkboxes per Task** → Each checkbox is verifiable (done or not done)
+
+**Total: 100-150 Checkboxes** for a typical MVP
+
+### Example: Horizontal Approach
+
+```markdown
+## Stage 1: Project Setup & Environment
+Goal: Create foundational project structure
+
+Task 1.1: Initialize Project Structure
+  [ ] Create root project directory
+  [ ] Create backend subdirectory
+  [ ] Create frontend subdirectory
+  [ ] Initialize git repository
+  [ ] Create root README.md
+
+Task 1.2: Backend Environment Setup
+  [ ] Create package manager config file
+  [ ] Install backend framework
+  [ ] Create virtual environment
+  [ ] Install dependencies
+  [ ] Verify backend runs (hello world endpoint)
+
+Task 1.3: Frontend Environment Setup
+  [ ] Initialize frontend framework
+  [ ] Install UI dependencies
+  [ ] Configure build tools
+  [ ] Verify frontend runs (hello world page)
+
+## Stage 2: Backend API Development
+Goal: Implement all API endpoints
+
+Task 2.1: Database Setup
+  [ ] Create database models
+  [ ] Write database migrations
+  [ ] Seed database with test data
+  [ ] Verify database connection
+
+Task 2.2: Implement Booking Endpoint
+  [ ] Create POST /api/bookings route
+  [ ] Add request validation
+  [ ] Add double-booking prevention logic
+  [ ] Add error handling
+  [ ] Write unit tests for endpoint
+
+[... continues for all backend endpoints ...]
+
+## Stage 3: Frontend Development
+[... all frontend pages ...]
+
+## Stage 4: Integration
+[... connect frontend to backend ...]
+
+## Stage 5: Testing & Documentation
+[... final testing and docs ...]
+```
+
+### Example: Vertical Approach
+
+```markdown
+## Stage 1: Minimal Working Installation
+Goal: Establish basic end-to-end system
+
+Task 1.1: Project Scaffolding
+  [ ] Create project structure
+  [ ] Initialize backend with health endpoint
+  [ ] Initialize frontend with homepage
+  [ ] Verify end-to-end connection (frontend calls backend)
+
+## Stage 2: Booking Feature (Complete Vertical Slice)
+Goal: Customer can book appointments
+
+Task 2.1: Backend - Booking API
+  [ ] Create booking database model
+  [ ] Create POST /api/bookings endpoint
+  [ ] Add validation logic
+  [ ] Add double-booking prevention
+  [ ] Write unit tests
+
+Task 2.2: Frontend - Booking Form
+  [ ] Create booking form component
+  [ ] Add form validation
+  [ ] Add service selection dropdown
+  [ ] Add date/time picker
+  [ ] Add submit button
+
+Task 2.3: Integration - Connect Booking Feature
+  [ ] Connect form to API endpoint
+  [ ] Handle successful booking (show confirmation)
+  [ ] Handle errors (show error messages)
+  [ ] Test end-to-end booking flow
+
+## Stage 3: Schedule View Feature (Complete Vertical Slice)
+[... backend + frontend + integration for schedule view ...]
+
+## Stage 4: Email Reminders Feature (Complete Vertical Slice)
+[... backend + frontend + integration for reminders ...]
+
+## Stage 5: Polish & Finalization
+[... code cleanup, final testing, docs ...]
+```
+
+### Why 100-150 Checkboxes?
+
+**"Build the backend" is too vague for AI.**
+
+What does "build the backend" mean?
+- Which endpoints?
+- What validation?
+- What error handling?
+- What tests?
+- What documentation?
+
+**"Create POST /api/bookings endpoint" is clear for AI.**
+
+But even that breaks down into:
+- [ ] Create route handler
+- [ ] Add request body validation
+- [ ] Add business logic (double-booking check)
+- [ ] Add error handling
+- [ ] Return JSON response
+- [ ] Write unit test
+
+Six checkboxes for one endpoint. Clear. Verifiable. No ambiguity.
+
+### What Makes a Good Checkbox?
+
+**Good checkboxes are:**
+- **Specific:** "Create homepage component" not "Build frontend"
+- **Verifiable:** Either done or not done, no gray area
+- **Atomic:** One clear action per checkbox
+- **Ordered:** Logical sequence (setup before build, backend before integration)
+
+**Bad checkboxes:**
+- [ ] Make the app work (vague)
+- [ ] Improve performance (not verifiable)
+- [ ] Build everything (not atomic)
+
+**Good checkboxes:**
+- [ ] Create database connection with error handling
+- [ ] Write unit test for booking endpoint (200 status)
+- [ ] Add CORS middleware for frontend domain
+
+### Time Investment
+
+- **You paste PRD + Tech Stack into STAGES_PROMPT:** 2 minutes
+- **AI generates Handoff Plan:** 5 minutes
+- **You review stages and checkboxes:** 3 minutes
+- **Total:** ~10 minutes
+
+**Value:** Prevents hours of missed requirements and forgotten tasks.
+
+### How the AI Uses This Plan
+
+During execution (Phases 5-7):
+
+1. AI reads the current stage goal
+2. AI executes Task 1.1
+3. AI checks off each checkbox as completed: [x]
+4. AI moves to Task 1.2
+5. When stage is complete, AI stops and waits for stage gate
+6. You review progress, AI asks questions about next stage
+7. AI continues with next stage
+
+The checkboxes provide progress tracking. You always know: "We're 60% through Stage 3, Task 3.2."
+
+### Checklist: Is Your Execution Plan Complete?
+
+Before proceeding, verify:
+
+- [ ] Plan has 5-7 logical stages
+- [ ] Each stage has a clear goal
+- [ ] Each task has 3-7 checkboxes
+- [ ] Total checkboxes: 100-150 (adjust based on project size)
+- [ ] Checkboxes are specific and verifiable
+- [ ] Order makes sense (setup → build → integrate → test)
+- [ ] Approach matches project needs (horizontal vs. vertical)
+
+### What Happens Next
+
+You save the Handoff Plan as `HANDOFF_STAGES_PLAN.md`. Now you have all three documents:
+- ✅ PRD (what to build)
+- ✅ Tech Stack (how to build it)
+- ✅ Handoff Plan (step-by-step execution)
+
+**Planning phase complete.** Total time invested: 40-60 minutes (simple) or 90-150 minutes (complex with Event Storming).
+
+**Next:** Start execution with stage gates.
+
+---
+
+<!-- PAGE BREAK -->
+
