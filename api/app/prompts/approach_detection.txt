@@ -1,0 +1,24 @@
+Based on this PRD, determine the best development approach (Horizontal vs. Vertical).
+
+PRD:
+{prd_content}
+
+Respond with JSON only:
+{{
+    "approach": "HORIZONTAL" or "VERTICAL",
+    "reasoning": "brief explanation"
+}}
+
+Use VERTICAL if:
+- 4+ features in scope
+- Complex integration needs
+- Need continuous testing/demos
+- Multiple interconnected components
+
+Use HORIZONTAL if:
+- 1-3 simple features
+- Straightforward architecture
+- Clear layer separation
+- Simple integration
+
+Choose the approach that best fits the project complexity and structure.

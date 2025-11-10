@@ -1,0 +1,204 @@
+# AI-Driven Development Framework API
+
+FastAPI backend that automates the AI-Driven Development Framework workflow.
+
+## Features
+
+- Automated workflow from project idea to execution plan
+- Smart detection for Event Storming and development approach
+- Real-time progress updates via WebSocket
+- Cost tracking with LangFuse
+- Multi-model support via OpenRouter
+- PostgreSQL for state persistence
+
+## Quick Start
+
+### Prerequisites
+
+- Docker and Docker Compose
+- Python 3.11+ (for local development)
+
+### Setup
+
+1. **Clone and navigate to API directory**
+   ```bash
+   cd api
+   ```
+
+2. **Copy environment file**
+   ```bash
+   cp .env.example .env
+   ```
+
+3. **Update .env with your keys**
+   - `ADMIN_TOKEN`: Set a secure admin token
+   - `OPENROUTER_API_KEY`: Your OpenRouter API key
+   - `LANGFUSE_PUBLIC_KEY` and `LANGFUSE_SECRET_KEY`: Your LangFuse keys
+
+4. **Start with Docker Compose**
+   ```bash
+   docker-compose up -d
+   ```
+
+5. **Run migrations**
+   ```bash
+   docker-compose exec api alembic upgrade head
+   ```
+
+6. **Access the API**
+   - API: http://localhost:8000
+   - Docs: http://localhost:8000/docs
+   - Health: http://localhost:8000/health
+
+## Development Setup (Local)
+
+### Install dependencies
+
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+### Run PostgreSQL
+
+```bash
+docker-compose up -d db
+```
+
+### Run migrations
+
+```bash
+alembic upgrade head
+```
+
+### Start development server
+
+```bash
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+## Database Migrations
+
+### Create a new migration
+
+```bash
+alembic revision --autogenerate -m "description"
+```
+
+### Apply migrations
+
+```bash
+alembic upgrade head
+```
+
+### Rollback migration
+
+```bash
+alembic downgrade -1
+```
+
+## API Documentation
+
+Once running, visit:
+- Swagger UI: http://localhost:8000/docs
+- ReDoc: http://localhost:8000/redoc
+
+## Project Structure
+
+```
+api/
+├── app/
+│   ├── api/           # API endpoints
+│   ├── core/          # Auth, security
+│   ├── db/            # Database models
+│   ├── schemas/       # Pydantic schemas
+│   ├── services/      # Business logic
+│   ├── workflow/      # Workflow engine
+│   └── prompts/       # LLM prompts
+├── alembic/           # Database migrations
+├── tests/             # Test suite
+└── docker-compose.yml # Docker setup
+```
+
+## Testing
+
+```bash
+pytest
+pytest --cov=app
+```
+
+## Phase 1 Status ✅
+
+- [x] FastAPI project structure
+- [x] PostgreSQL with Docker Compose
+- [x] SQLAlchemy models
+- [x] Alembic migrations
+- [x] Admin token authentication
+- [x] Rate limiting (SlowAPI)
+- [x] Health check endpoint
+- [x] CORS middleware
+- [x] Logging configuration
+
+## Phase 2 Status ✅
+
+- [x] OpenRouter LLM service with cost calculation
+- [x] LangFuse integration with tracing
+- [x] Prompt template manager (6 prompts)
+- [x] Smart detection prompts
+- [x] Pydantic schemas for API
+- [x] Comprehensive test suite
+
+## Phase 3 Status ✅
+
+- [x] Workflow state machine (phase transitions)
+- [x] Base phase handler with state tracking
+- [x] Smart Detection phase handler
+- [x] Event Storming phase handler (autonomous)
+- [x] PRD Generation phase handler (autonomous)
+- [x] Tech Stack phase handler
+- [x] Execution Plan phase handler (with approach detection)
+- [x] Document storage utilities
+- [x] WorkflowEngine orchestrator
+- [x] LangFuse integration throughout
+- [x] Error handling and logging
+
+## Phase 4 Status ✅
+
+- [x] REST API endpoints (projects CRUD)
+- [x] POST /api/v1/projects - Create project
+- [x] POST /api/v1/projects/{id}/start-workflow - Start workflow (background)
+- [x] GET /api/v1/projects/{id} - Get project status
+- [x] GET /api/v1/projects/{id}/documents - Get all documents
+- [x] GET /api/v1/projects/{id}/documents/{type} - Get single document
+- [x] GET /api/v1/projects/{id}/costs - Get cost breakdown
+- [x] Background task execution (FastAPI BackgroundTasks)
+- [x] Error responses and HTTP exceptions
+- [x] Rate limiting (per endpoint)
+- [x] OpenAPI/Swagger documentation (auto-generated)
+
+## Phase 5 Status ✅
+
+- [x] WebSocket connection manager
+- [x] WebSocket endpoint (ws://host/api/v1/projects/{id}/progress)
+- [x] Broadcast phase events (started, completed, failed)
+- [x] Broadcast workflow completion with totals
+- [x] Integration with workflow engine (all phases)
+- [x] Error handling with WebSocket notifications
+- [x] Ping/pong keep-alive support
+
+## WebSocket Event Types
+
+Clients can connect to `ws://localhost:8000/api/v1/projects/{project_id}/progress` to receive real-time updates:
+
+- `connected` - Initial connection confirmation
+- `phase_started` - Phase started with message
+- `phase_completed` - Phase completed with duration and cost
+- `phase_failed` - Phase failed with error message
+- `workflow_completed` - Workflow finished with totals
+- `workflow_failed` - Workflow failed with error
+- `pong` - Response to ping (keep-alive)
+
+## License
+
+See main project license.

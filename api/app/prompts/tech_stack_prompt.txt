@@ -1,0 +1,17 @@
+Excellent. The PRD is now complete and provides a clear picture of the project's requirements.
+
+Now, let's move to **Step 2: Tech Stack Definition.**
+
+Based *only* on the PRD we just created, your task is to generate a `TECH_STACK_DOCUMENT.md`. This document must detail the technologies, frameworks, and infrastructure for the project.
+
+Use the provided PRD as your single source of truth. The document must follow the established schema, including sections for Frontend, Backend, and Infrastructure/DevOps. For every technology choice, you must provide a concise justification in the table, directly referencing a requirement from the PRD (e.g., "Chosen for its high performance to meet the <150ms NFR.").
+
+Finally, include a simple Mermaid diagram illustrating the high-level architecture.
+
+Here is the complete PRD for your reference:
+
+---
+{prd_content}
+---
+
+Generate the Tech Stack document now.
